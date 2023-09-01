@@ -1,0 +1,57 @@
+@import "/node_modules/modern-normalize/modern-normalize.css";
+
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --accent-blue: #09237e;
+  --accent-blue-table: #204ffe;
+  --dark-grey: #2f2f2f;
+  --light-grey: #b3b3b3;
+  --background: #060412;
+  --background-table: #080b27;
+  --warning-rose: #eb3795;
+  --button-color: #272a2e;
+  --button-color-hover: rgba(39, 42, 46, 0.9);
+}
+
+body {
+  font-family: "roboto-mono";
+  background-color: var(--background);
+  color: var(--white);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+li,
+a {
+  text-decoration: none;
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+th, td, tr {
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  margin: 0;
+  padding: 0;
+}

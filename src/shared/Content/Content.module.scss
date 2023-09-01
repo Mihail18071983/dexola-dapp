@@ -1,0 +1,19 @@
+.content {
+  color: var(--light-grey);
+  font-family: Roboto Mono;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.28px;
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    letter-spacing: -0.32px;
+    width: 460px;
+  }
+
+  @media screen and (min-width: 1440px) {
+    font-size: 18px;
+    letter-spacing: -0.36px;
+    width: 601px;
+  }
+}

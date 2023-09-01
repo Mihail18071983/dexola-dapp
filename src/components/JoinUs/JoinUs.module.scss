@@ -1,0 +1,35 @@
+.joinUs {
+  padding-top: 0px;
+  padding-bottom: 65px;
+  border-bottom: 1px solid var(--accent-blue);
+}
+
+.wrapper {
+  @media screen and (min-width: 1440px) {
+    display: flex;
+    justify-content: space-between;
+    gap: 66px;
+  }
+}
+
+.content {
+  margin-bottom: 32px;
+  @media screen and (min-width: 744px) {
+    margin-bottom: 56px;
+  }
+  @media screen and (min-width: 1440px) {
+    margin-bottom: 16px;
+  }
+}
+
+
+.arrow {
+  @media screen and (max-width: 1439px) {
+    display: none;
+  }
+
+  @media screen and (min-width: 1440px) {
+    width: 44px;
+    height: 44px;
+  }
+}
