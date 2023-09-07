@@ -1,4 +1,7 @@
 import "./index.scss";
+import React from "react";
+import { WagmiConfig } from "wagmi";
+import {config} from "./wagmi"
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "@fontsource/kanit/400.css";
@@ -9,8 +12,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  // <React.StrictMode>
-  <Router basename="/">
+  <React.StrictMode>
+    <WagmiConfig config={config}>
+<Router basename="/">
     <App />
     <ToastContainer
           position="top-right"
@@ -24,5 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           pauseOnHover
         />
   </Router>
-  // </React.StrictMode>
+    </WagmiConfig>
+  
+   </React.StrictMode>
 );
