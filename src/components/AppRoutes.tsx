@@ -1,12 +1,16 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import { Main } from "./Main/Main";
+import { StakePage } from "./Stake/StakePage";
+import { WithdrawPage } from "./Withdraw/WithdrawPage";
+import { ClaimRewardsPage } from "./ClaimRewards/ClaimRewardsPage";
 
 export const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<Main />} />    
+      <Route path="/" element={<StakePage />} />
+      <Route path="/withdraw" element={<WithdrawPage />} />
+      <Route path="/claimrewards" element={<ClaimRewardsPage />} />
     </Routes>
   );
 };

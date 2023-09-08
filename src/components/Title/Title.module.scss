@@ -1,0 +1,14 @@
+.title {
+  color: #fff;
+  font-family: Kanit;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.205;
+  @media screen and (min-width: 744px) {
+    font-size: 40px;
+    line-height: 1.4;
+  }
+  @media screen and (min-width: 1440px) {
+    font-size: 48px;
+  }
+}

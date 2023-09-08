@@ -11,33 +11,87 @@ import containerStyles from "../../Container.module.scss";
 
 import { Logo } from "../../shared/svgComponents/Logo";
 import { Button } from "../../shared/Button/Button";
+import { Title } from "../Title/Title";
 
 import stakingABI from "../../stakingABI.json";
 
 export const Header: FC = () => {
+  const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
+  const CONTRACT_ERC_TOKEN = import.meta.env.VITE_CONTRACT_ERC_TOKEN;
+  const DAY_Duration = 24 * 60 * 60;
   const injected = new InjectedConnector();
-  const { connector, isConnected, address, isConnecting, isDisconnected } =
-    useAccount();
+  const { address, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
   const { disconnect } = useDisconnect();
 
-  const { data, isError } = useBalance({
+  const { data: userTokenData } = useBalance({
+    address,
+    token: CONTRACT_ERC_TOKEN,
+    formatUnits: "ether",
+  });
+
+  const { data: userEtherData } = useBalance({
     address,
     watch: true,
     formatUnits: "ether",
   });
 
-  const { data: contractData } = useContractRead({
-    address: "0x59Ec26901B19fDE7a96f6f7f328f12d8f682CB83",
+  const { data: stakedBalanceData } = useContractRead({
+    address: isConnected ? CONTRACT_ADDRESS : 0,
     abi: stakingABI,
     functionName: "balanceOf",
     args: [address],
   });
 
-  const balance = contractData? formatUnits(contractData as bigint, 18):0;
+  const { data: NumberRewordsForPeriodData } = useContractRead({
+    address: isConnected ? CONTRACT_ADDRESS : 0,
+    abi: stakingABI,
+    functionName: "getRewardForDuration",
+  });
 
-  console.log("contractBalance", balance);
+  const { data: totalStakeUsersData } = useContractRead({
+    address: isConnected ? CONTRACT_ADDRESS : 0,
+    abi: stakingABI,
+    functionName: "totalSupply",
+  });
+
+  const { data: periodFinishData } = useContractRead({
+    address: isConnected ? CONTRACT_ADDRESS : 0,
+    abi: stakingABI,
+    functionName: "periodFinish",
+  });
+
+  const { data: rewardData } = useContractRead({
+    address: isConnected ? CONTRACT_ADDRESS : 0,
+    abi: stakingABI,
+    functionName: "earned",
+    args:[address]
+  });
+
+  const stakedBalance = stakedBalanceData
+    ? formatUnits(stakedBalanceData as bigint, 6)
+    : 0;
+
+  const totalRewordForPeriod = NumberRewordsForPeriodData
+    ? +formatUnits(NumberRewordsForPeriodData as bigint, 6)
+    : 0;
+
+  const totalStakeUsers = totalStakeUsersData
+    ? +formatUnits(totalStakeUsersData as bigint, 6)
+    : 0;
+
+  const periodFinish = periodFinishData
+    ? +formatUnits(periodFinishData as bigint, 6)
+    : 0;
+
+  const rewardsAvailable = rewardData!==undefined
+    ? formatUnits(rewardData as bigint, 6)
+    : 0;
+
+  const Days = periodFinish / DAY_Duration;
+
+  const APR = (totalRewordForPeriod * 100) / totalStakeUsers;
 
   return (
     <header className={styles.header}>
@@ -57,17 +111,33 @@ export const Header: FC = () => {
               Connect Wallet
             </Button>
           ) : (
-              <>
-                <p>{ balance} STRU</p>
+            <>
+              <p>Balance: {userTokenData?.formatted} STRU</p>
               <div className={styles.clienInfo}>
                 <p>
-                  {" "}
-                  Balance: {data?.formatted} {data?.symbol}
+                  {userEtherData?.formatted} {userEtherData?.symbol}
                 </p>
                 <p>{address}</p>
               </div>
             </>
           )}
+        </div>
+        <div className={styles.infoWrapper}>
+          <Title text="StarRunner Token staking" />
+          <p>{stakedBalance} STRU</p>
+          <p>Staked balance</p>
+          <p>
+            <span>≈{APR}%</span> <span>APR</span>
+          </p>
+          <p>
+            <span>{Days}</span>
+            <span>DAYS</span>
+          </p>
+          <p>
+            <span>{rewardsAvailable}</span>
+            <span>STRU</span>
+            <span>Rewards</span>
+          </p>
         </div>
       </div>
     </header>
