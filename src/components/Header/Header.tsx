@@ -1,92 +1,41 @@
 import React, { FC } from "react";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { useBalance } from "wagmi";
-import { useContractRead } from "wagmi";
-import { formatUnits } from "viem/utils";
+import { useAccount, useConnect } from "wagmi";
 import { connectWallet } from "../../shared/utils/connectWallet";
-
+import { formatted } from "../../shared/utils/formatUnits";
+import {
+  useStakedBalance,
+  useTotalStake,
+  usePeriodFinish,
+  useReward,
+  useRewardForPeriod,
+  useUserBalance,
+  useUserEther
+} from "../../hooks/contracts-api";
 import styles from "./Header.module.scss";
 import containerStyles from "../../Container.module.scss";
-
+import { Oval } from "react-loader-spinner";
 import { Logo } from "../../shared/svgComponents/Logo";
 import { Button } from "../../shared/Button/Button";
 import { Title } from "../Title/Title";
 import { Help } from "../../shared/svgComponents/Help";
 
-import stakingABI from "../../stakingABI.json";
-
 export const Header: FC = () => {
-  const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
-  const CONTRACT_ERC_TOKEN = import.meta.env.VITE_CONTRACT_ERC_TOKEN;
   const DAY_Duration = 24 * 60 * 60;
-  const { address, isConnected } = useAccount();
-  const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect();
-  const { disconnect } = useDisconnect();
+  const { address, isConnected, isConnecting } = useAccount();
+  const { connect, error } = useConnect();
+  const { data: stakedBalanceData } = useStakedBalance();
+  const { data: totalStakeUsersData } = useTotalStake();
+  const { data: periodFinishData } = usePeriodFinish();
+  const { data: rewardData } = useReward();
+  const { data: numberRewordsForPeriodData } = useRewardForPeriod();
+  const { data: userTokenData } = useUserBalance();
+  const { data: userEtherData } =useUserEther();
 
-
-  const { data: userTokenData } = useBalance({
-    address,
-    token: CONTRACT_ERC_TOKEN,
-    formatUnits: "ether",
-  });
-
-  const { data: userEtherData } = useBalance({
-    address,
-    watch: true,
-    formatUnits: "ether",
-  });
-
-  const { data: stakedBalanceData } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
-    functionName: "balanceOf",
-    args: [address],
-  });
-
-  const { data: NumberRewordsForPeriodData } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
-    functionName: "getRewardForDuration",
-  });
-
-  const { data: totalStakeUsersData } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
-    functionName: "totalSupply",
-  });
-
-  const { data: periodFinishData } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
-    functionName: "periodFinish",
-  });
-
-  const { data: rewardData } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
-    functionName: "earned",
-    args: [address],
-  });
-
-  const stakedBalance = stakedBalanceData
-    ? formatUnits(stakedBalanceData as bigint, 6)
-    : 0;
-
-  const totalRewordForPeriod = NumberRewordsForPeriodData
-    ? +formatUnits(NumberRewordsForPeriodData as bigint, 6)
-    : 0;
-
-  const totalStakeUsers = totalStakeUsersData
-    ? +formatUnits(totalStakeUsersData as bigint, 6)
-    : 0;
-
-  const periodFinish = periodFinishData
-    ? +formatUnits(periodFinishData as bigint, 6)
-    : 0;
-
-  const rewardsAvailable =
-    rewardData !== undefined ? formatUnits(rewardData as bigint, 6) : 0;
+  const stakedBalance = formatted(stakedBalanceData);
+  const totalRewordForPeriod = formatted(numberRewordsForPeriodData);
+  const totalStakeUsers = formatted(totalStakeUsersData);
+  const periodFinish = formatted(periodFinishData);
+  const rewardsAvailable = formatted(rewardData);
 
   const Days = periodFinish / DAY_Duration;
 
@@ -100,8 +49,23 @@ export const Header: FC = () => {
             <Logo className={styles.icon} width="34" height="20" />
           </button>
           {!isConnected ? (
-            <Button onClick={()=>(connectWallet({connect, error, isConnected}))} type="button">
-              Connect Wallet
+            <Button
+              disabled={isConnecting}
+              onClick={() => connectWallet({ connect, error })}
+              type="button"
+            >
+              Connect Wallet{" "}
+              {isConnecting && (
+                <Oval
+                  ariaLabel="loading-indicator"
+                  height={32}
+                  width={32}
+                  strokeWidth={2}
+                  strokeWidthSecondary={1}
+                  color="blue"
+                  secondaryColor="white"
+                />
+              )}
             </Button>
           ) : (
             <>

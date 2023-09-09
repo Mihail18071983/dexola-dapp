@@ -9,6 +9,68 @@
   border: 1px solid var(--accent-blue);
 }
 
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--dark-grey);
+}
+.stake {
+  color: #fff;
+  font-family: Kanit;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: -0.36px;
+  @media screen and (min-width: 744px) {
+    font-size: 24px;
+    letter-spacing: -0.48px;
+  }
+}
+
+.rest {
+  display: flex;
+  align-items: baseline;
+  gap:4px;
+}
+.rewardsName {
+  color: var(--light-grey);
+  font-family: Roboto Mono;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.285;
+  letter-spacing: -0.28px;
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    letter-spacing: -0.32px;
+  }
+}
+
+.rewardsValue {
+  color: #fff;
+  font-family: Roboto Mono;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+  @media screen and (min-width: 744px) {
+    font-size: 28px;
+  }
+}
+
+.rewardUnities {
+  color: var(--white);
+  font-family: Roboto Mono;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.25;
+  text-transform: uppercase;
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+  }
+}
+
 .label {
   position: relative;
   text-align: center;
@@ -18,11 +80,10 @@
   display: block;
   width: 100%;
   height: 40px;
-  margin-left: auto;
+  margin-left: 0;
   margin-right: auto;
-  padding-left: 30px;
-  padding-top: 14px;
-  padding-bottom: 14px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   border: none;
   border-bottom: 1px solid var(--white);
   background-color: transparent;
@@ -37,14 +98,14 @@
   }
   &:focus {
     outline: none;
-    border-bottom: 1px solid var(--warning-rose);
+    border-bottom: 1px solid var(--white);
   }
   &::placeholder {
-    color: var(--dark-grey);
+    color: var(--light-grey);
   }
 
   @media screen and (min-width: 744px) {
-    font-style: 16px;
+    font-size: 16px;
     line-height: 1.31;
     letter-spacing: -0.32px;
     padding-top: 11px;
@@ -53,32 +114,12 @@
 
   @media screen and (min-width: 1440px) {
     padding-top: 8px;
-    padding-bottom:8px;
-    font-style: 18px;
+    padding-bottom: 8px;
+    font-size: 18px;
     line-height: 1.33;
     letter-spacing: -0.36px;
+    max-width: 391px;
   }
-}
-
-.phone {
-  padding-left: 78px;
-  color: var(--dark-grey);
-  &:focus {
-    color:var(--white)
-  }
-}
-
-.asterix {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 0;
-  color: var(--warning-rose);
-  font-family: Roboto Mono;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0.32px;
 }
 
 .errMessage {
@@ -112,54 +153,16 @@
   color: var(--white);
 }
 
-.passwordIcon {
-  width: 24px;
-  height: 24px;
-}
-
 .btn {
   width: 100%;
   @media screen and (min-width: 744px) {
-    width: 235px;
+    width: 130px;
     margin-left: 0;
     margin-right: auto;
-  }
-  @media screen and (min-width: 1440px) {
-    font-size: 16px;
-    line-height: 1.5;
-    padding-left: 66px;
-    padding-right: 66px;
   }
 }
 
 .btnContent {
   margin-left: auto;
   margin-right: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10.5px;
-  &::before {
-    content: "";
-    display: block;
-    width: 22.5px;
-    height: 1.5px;
-    background-color: var(--white);
-  }
-}
-
-.flagIcon {
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  transform: translateY(-50%);
-  top: 50%;
-  left: 0;
-}
-
-.arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 38px;
 }
