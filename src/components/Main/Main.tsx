@@ -6,7 +6,7 @@ import { AppRoutes } from "../AppRoutes";
 
 export const Main: FC = () => {
   return (
-    <main>
+    <main className={styles.main}>
       <div className={containerStyles.container}>
         <nav className={styles.stakeMenu}>
           <NavLink className={styles.link} to="/">

@@ -1,10 +1,9 @@
 import React, { FC } from "react";
-
-import { InjectedConnector } from "wagmi/connectors/injected";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { useBalance } from "wagmi";
 import { useContractRead } from "wagmi";
 import { formatUnits } from "viem/utils";
+import { connectWallet } from "../../shared/utils/connectWallet";
 
 import styles from "./Header.module.scss";
 import containerStyles from "../../Container.module.scss";
@@ -12,6 +11,7 @@ import containerStyles from "../../Container.module.scss";
 import { Logo } from "../../shared/svgComponents/Logo";
 import { Button } from "../../shared/Button/Button";
 import { Title } from "../Title/Title";
+import { Help } from "../../shared/svgComponents/Help";
 
 import stakingABI from "../../stakingABI.json";
 
@@ -19,11 +19,11 @@ export const Header: FC = () => {
   const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
   const CONTRACT_ERC_TOKEN = import.meta.env.VITE_CONTRACT_ERC_TOKEN;
   const DAY_Duration = 24 * 60 * 60;
-  const injected = new InjectedConnector();
   const { address, isConnected } = useAccount();
   const { connect, connectors, error, isLoading, pendingConnector } =
     useConnect();
   const { disconnect } = useDisconnect();
+
 
   const { data: userTokenData } = useBalance({
     address,
@@ -66,7 +66,7 @@ export const Header: FC = () => {
     address: isConnected ? CONTRACT_ADDRESS : 0,
     abi: stakingABI,
     functionName: "earned",
-    args:[address]
+    args: [address],
   });
 
   const stakedBalance = stakedBalanceData
@@ -85,9 +85,8 @@ export const Header: FC = () => {
     ? +formatUnits(periodFinishData as bigint, 6)
     : 0;
 
-  const rewardsAvailable = rewardData!==undefined
-    ? formatUnits(rewardData as bigint, 6)
-    : 0;
+  const rewardsAvailable =
+    rewardData !== undefined ? formatUnits(rewardData as bigint, 6) : 0;
 
   const Days = periodFinish / DAY_Duration;
 
@@ -101,13 +100,7 @@ export const Header: FC = () => {
             <Logo className={styles.icon} width="34" height="20" />
           </button>
           {!isConnected ? (
-            <Button
-              onClick={() => {
-                console.log("connected");
-                connect({ connector: injected });
-              }}
-              type="button"
-            >
+            <Button onClick={()=>(connectWallet({connect, error, isConnected}))} type="button">
               Connect Wallet
             </Button>
           ) : (
@@ -122,23 +115,30 @@ export const Header: FC = () => {
             </>
           )}
         </div>
-        <div className={styles.infoWrapper}>
-          <Title text="StarRunner Token staking" />
-          <p>{stakedBalance} STRU</p>
-          <p>Staked balance</p>
-          <p>
-            <span>≈{APR}%</span> <span>APR</span>
-          </p>
-          <p>
-            <span>{Days}</span>
-            <span>DAYS</span>
-          </p>
-          <p>
-            <span>{rewardsAvailable}</span>
-            <span>STRU</span>
-            <span>Rewards</span>
-          </p>
-        </div>
+        {isConnected && (
+          <div className={styles.infoWrapper}>
+            <Title text="StarRunner Token staking" />
+            <p>
+              <span>{stakedBalance} STRU</span>
+              <span className={styles.stakedBalanceName}>
+                Staked balance
+                <Help width="24" heigth="24" />
+              </span>
+            </p>
+            <p>
+              <span>≈{APR}%</span> <span>APR</span>
+            </p>
+            <p>
+              <span>{Days}</span>
+              <span>DAYS</span>
+            </p>
+            <p>
+              <span>{rewardsAvailable}</span>
+              <span>STRU</span>
+              <span>Rewards</span>
+            </p>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -8,7 +8,7 @@
   --dark-grey: #2f2f2f;
   --light-grey: #b3b3b3;
   --background: #060412;
-  --background-table: #080b27;
+  --background-icon: #080b27;
   --warning-rose: #eb3795;
   --button-color: #272a2e;
   --button-color-hover: rgba(39, 42, 46, 0.9);
@@ -18,6 +18,13 @@ body {
   font-family: "roboto-mono";
   background-color: var(--background);
   color: var(--white);
+}
+
+#root {
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 ul {

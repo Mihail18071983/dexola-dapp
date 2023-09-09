@@ -1,26 +1,28 @@
 .button {
   cursor: pointer;
-  padding: 12px 78px;
+  text-align: center;
+  padding: 8px 23px;
   border: none;
   outline: none;
   display: flex;
   align-items: center;
-  gap: 7px;
   background-color: var(--button-color);
   color: var(--white);
   font-size: 14px;
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.71;
   letter-spacing: 0.32px;
   text-transform: uppercase;
   transition: background-color 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   &:hover {
-    background-color: var(--button-color-hover);
+    color:var(--light-grey);
   }
 
   @media screen and (min-width: 744px) {
     font-size: 16px;
-    padding-left: 66px;
-    padding-right: 66px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 40px;
+    padding-right: 40px;
   }
 }
