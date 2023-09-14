@@ -1,12 +1,17 @@
 .form {
   padding: 16px 24px;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  justify-content: space-between;
   margin-left: auto;
   margin-right: auto;
-  border: 1px solid var(--accent-blue);
+  margin-bottom: 40px;
+  flex: 1 1 auto;
+  @media screen and (min-width: 744px) {
+    border: 1px solid var(--accent-blue);
+  }
 }
 
 .heading {
@@ -16,6 +21,7 @@
   padding-top: 8px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--dark-grey);
+  margin-bottom: 24px;
 }
 .stake {
   color: #fff;
@@ -33,7 +39,7 @@
 .rest {
   display: flex;
   align-items: baseline;
-  gap:4px;
+  gap: 4px;
 }
 .rewardsName {
   color: var(--light-grey);
@@ -136,8 +142,9 @@
   letter-spacing: 0.26px;
 }
 
-.formLabelPasswordConteiner {
+.formLabelConteiner {
   position: relative;
+  margin-bottom: 32px;
 }
 
 .showPasswordButton {

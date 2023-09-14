@@ -1,40 +1,45 @@
 .container {
-margin-left: auto;
-margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
+  flex: 1 1 auto;
+}
+
+.stakeWrapper {
+  width: 100%;
+  min-height: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .iconWrapper {
-    position: relative;
-    padding: 16px;
-    border:none;
-    border-radius: 50%;
-    background-color: var(--background-icon);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 96px;
-    margin-bottom: 16px;
+  position: relative;
+  padding: 16px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--background-icon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 96px;
+  margin-bottom: 16px;
 }
 
 .icon {
-    position:absolute;
-    bottom: 20px;
-    right: 16px;
+  position: absolute;
+  bottom: 20px;
+  right: 16px;
 }
 
 .subTitle {
-    padding-left: 40px;
-    padding-right: 40px;
-    margin-bottom: 110px;
-    @media screen and (min-width: 744px) {
-        margin-bottom: 32px;
-    }   
+  padding-left: 40px;
+  padding-right: 40px;
 }
 
 .btn {
-    width: 100%;
-    display: block;
+  width: 100%;
+  display: block;
+  margin-bottom: 56px;
 }
-

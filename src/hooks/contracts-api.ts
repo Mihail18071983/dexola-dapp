@@ -1,87 +1,84 @@
-import stakingABI from "../stakingABI.json";
-const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS;
-const CONTRACT_ERC_TOKEN = import.meta.env.VITE_CONTRACT_ERC_TOKEN;
+import {
+  starRunnerTokenContractConfig,
+  starRunnerStakingContractConfig,
+} from "../shared/utils/contracts";
 import { useAccount, useBalance, useContractRead } from "wagmi";
 
 export const usePeriodFinish = () => {
-  const { isConnected } = useAccount();
-  const { data } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
+  const { data, isSuccess } = useContractRead({
+    ...starRunnerStakingContractConfig,
     functionName: "periodFinish",
+    watch: true,
   });
-  return { data };
+  return { data, isSuccess };
 };
 
 export const useRewardRate = () => {
-  const { isConnected } = useAccount();
-  const { data } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
+  const { data, isSuccess } = useContractRead({
+    ...starRunnerStakingContractConfig,
     functionName: "rewardRate",
+    watch: true,
   });
-  return { data };
+  return { data, isSuccess };
 };
 
 export const useTotalStake = () => {
-  const { isConnected } = useAccount();
-  const { data } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
+  const { data, isSuccess } = useContractRead({
+    ...starRunnerStakingContractConfig,
     functionName: "totalSupply",
+    watch: true,
   });
-  return { data };
+  return { data, isSuccess };
 };
 
 export const useStakedBalance = () => {
-  const { isConnected, address } = useAccount();
-  const { data } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
+  const { address } = useAccount();
+  const { data, isSuccess } = useContractRead({
+    ...starRunnerStakingContractConfig,
     functionName: "balanceOf",
-    args: [address],
+    args: [address!],
+    watch: true,
   });
 
-  return { data };
+  return { data, isSuccess };
 };
 
 export const useReward = () => {
-  const { isConnected, address } = useAccount();
-  const { data } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
+  const { address } = useAccount();
+  const { data, isSuccess } = useContractRead({
+    ...starRunnerStakingContractConfig,
     functionName: "earned",
-    args: [address],
+    args: [address!],
+    watch: true,
   });
-  return { data };
+  return { data, isSuccess };
 };
 
 export const useRewardForPeriod = () => {
-  const { isConnected } = useAccount();
-  const { data } = useContractRead({
-    address: isConnected ? CONTRACT_ADDRESS : 0,
-    abi: stakingABI,
+  const { data, isSuccess } = useContractRead({
+    ...starRunnerStakingContractConfig,
     functionName: "getRewardForDuration",
+    watch: true,
   });
-  return { data };
+  return { data, isSuccess };
 };
 
 export const useUserBalance = () => {
-  const {address}=useAccount();
-  const { data } = useBalance({
-    address,
-    token: CONTRACT_ERC_TOKEN,
-    formatUnits: "ether",
+  const { address } = useAccount();
+  const { data, refetch, isSuccess } = useContractRead({
+    ...starRunnerTokenContractConfig,
+    functionName: "balanceOf",
+    args: [address!],
+    watch: true,
   });
-  return { data };
+  return { data, refetch, isSuccess };
 };
 
 export const useUserEther = () => {
-  const {address}=useAccount();
-   const { data } = useBalance({
+  const { address } = useAccount();
+  const { data, isSuccess } = useBalance({
     address,
     watch: true,
-    formatUnits: "ether",
   });
-  return { data };
+  return { data, isSuccess };
 };
