@@ -71,7 +71,6 @@ export const Header: FC = () => {
     isEtherBalanceSuccess && setEtherValue(userEtherBalance);
     isBalanceTokenSuccess && setTokenValue(tokenBalanceValue);
     isTotalStakeUsersSuccess && setTotalStakeUsers(totalStakeUsers);
-    console.log(isTotalStakeUsersSuccess)
     isTotalRewardForPeriodSuccess &&
       setTotalRewardForPeriod(totalRewardForPeriod);
     if (_totalRewardForPeriod && _totalStakeUsers) {
@@ -96,7 +95,6 @@ export const Header: FC = () => {
   ]);
 
   useEffect(() => {
-    console.log("render");
     setValue();
   }, [setValue]);
 

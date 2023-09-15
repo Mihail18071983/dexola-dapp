@@ -4,15 +4,15 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { ColorRing } from "react-loader-spinner";
 import { Button } from "../../shared/Button/Button";
-import { BaseError } from "viem";
+import { Oval } from "react-loader-spinner";
+import { ReactComponent as IconApproved } from "../../assets/svg/IconApproved.svg";
+import { ReactComponent as IconRejected } from "../../assets/svg/IconRejected.svg";
 import {
   usePrepareContractWrite,
   useContractWrite,
   useAccount,
   useWaitForTransaction,
 } from "wagmi";
-
-import { stringify } from "../../shared/utils/stringify";
 
 import {
   starRunnerStakingContractConfig,
@@ -45,15 +45,14 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     mode: "onSubmit",
   });
 
-  const amountVAlue = Number(watch("amount"))
- 
+  const amountVAlue = Number(watch("amount"));
 
   const { address } = useAccount();
 
   const { config: tokenConfig } = usePrepareContractWrite({
     ...starRunnerTokenContractConfig,
     functionName: "approve",
-    args: [CONTRACT_STAKING_ADDRESS, BigInt(2000*1e18)],
+    args: [CONTRACT_STAKING_ADDRESS, BigInt(2000 * 1e18)],
   });
 
   const { writeAsync: writeToken } = useContractWrite(tokenConfig);
@@ -61,7 +60,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
   const { config: stakingConfig } = usePrepareContractWrite({
     ...starRunnerStakingContractConfig,
     functionName: "stake",
-    args: [BigInt(amountVAlue ? amountVAlue*1e18 : "1000")],
+    args: [BigInt(amountVAlue ? amountVAlue * 1e18 : "1000")],
   });
 
   const {
@@ -85,8 +84,11 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
         return;
       }
 
-      await writeToken?.();
+      if (Number(struBalance) < amountVAlue) {
+        return;
+      }
 
+      await writeToken?.();
       writeStaking?.();
 
       reset();
@@ -143,19 +145,53 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
             <span className={styles.btnContent}>Stake</span>
           )}
         </Button>
-        <>
-          {isLoading && <div>Check wallet...</div>}
-          {isPending && <div>Transaction pending...</div>}
-          {isSuccess && (
-            <>
-              <div>Transaction Hash: {data?.hash}</div>
-              <div>
-                Transaction Receipt: <pre>{stringify(receipt, null, 2)}</pre>
-              </div>
-            </>
+        <div className={styles.infomessageWrapper}>
+          {isPending && (
+            <div>
+              <Oval
+                width={32}
+                height={32}
+                strokeWidth={6}
+                color="rgba(32, 254, 81, 1)"
+                secondaryColor="rgba(110, 117, 139, 1)"
+              />
+              <p>Adding {amountVAlue} STRU to Staking</p>
+            </div>
           )}
-          {isError && <div>{(error as BaseError)?.shortMessage}</div>}
-        </>
+          {isSuccess && (
+            <div>
+              <div className={styles.iconWrapper}>
+                <IconApproved />
+              </div>
+              <p>
+                <span>{amountVAlue} STRU</span>
+                <span>successfully added to Staking</span>
+              </p>
+            </div>
+          )}
+          {isError && (
+            <div>
+              <div className={`${styles.iconWrapper} ${styles.rejected}`}>
+                <IconRejected />
+              </div>
+              <p>
+                <span>Connection Error.</span>
+                <span>Please try again</span>
+              </p>
+            </div>
+          )}
+          {Number(struBalance) < amountVAlue && (
+            <div>
+              <div className={`${styles.iconWrapper} ${styles.rejected}`}>
+                <IconRejected />
+              </div>
+              <p>
+                <span>You don't have enough tokens.</span>
+                <span>Please try again</span>
+              </p>
+            </div>
+          )}
+        </div>
       </form>
       <DevTool control={control} />
     </>
