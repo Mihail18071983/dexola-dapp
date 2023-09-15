@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./Form.module.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
@@ -45,6 +45,8 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     mode: "onSubmit",
   });
 
+  const [Amount, setAmount] = useState<number | null>(null);
+
   const amountVAlue = Number(watch("amount"));
 
   const { address } = useAccount();
@@ -71,11 +73,9 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     isError,
   } = useContractWrite(stakingConfig);
 
-  const {
-    data: receipt,
-    isLoading: isPending,
-    isSuccess,
-  } = useWaitForTransaction({ hash: data?.hash });
+  const { isLoading: isPending, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
 
   const onSubmit: SubmitHandler<FormData> = async () => {
     try {
@@ -87,6 +87,8 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
       if (Number(struBalance) < amountVAlue) {
         return;
       }
+
+      setAmount(amountVAlue);
 
       await writeToken?.();
       writeStaking?.();
@@ -129,22 +131,6 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
             </span>
           </p>
         </div>
-
-        <Button className={styles.btn} type="submit">
-          {isSubmitting ? (
-            <ColorRing
-              visible={true}
-              height="80"
-              width="80"
-              ariaLabel="blocks-loading"
-              wrapperStyle={{}}
-              wrapperClass="blocks-wrapper"
-              colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
-            />
-          ) : (
-            <span className={styles.btnContent}>Stake</span>
-          )}
-        </Button>
         <div className={styles.infomessageWrapper}>
           {isPending && (
             <div>
@@ -155,7 +141,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
                 color="rgba(32, 254, 81, 1)"
                 secondaryColor="rgba(110, 117, 139, 1)"
               />
-              <p>Adding {amountVAlue} STRU to Staking</p>
+              <p>Adding {Amount} STRU to Staking</p>
             </div>
           )}
           {isSuccess && (
@@ -164,7 +150,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
                 <IconApproved />
               </div>
               <p>
-                <span>{amountVAlue} STRU</span>
+                <span>{Amount} STRU</span>
                 <span>successfully added to Staking</span>
               </p>
             </div>
@@ -192,6 +178,22 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
             </div>
           )}
         </div>
+
+        <Button className={styles.btn} type="submit">
+          {isSubmitting ? (
+            <ColorRing
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="blocks-loading"
+              wrapperStyle={{}}
+              wrapperClass="blocks-wrapper"
+              colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+            />
+          ) : (
+            <span className={styles.btnContent}>Stake</span>
+          )}
+        </Button>
       </form>
       <DevTool control={control} />
     </>
