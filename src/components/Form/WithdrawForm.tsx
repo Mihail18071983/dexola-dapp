@@ -5,8 +5,8 @@ import { DevTool } from "@hookform/devtools";
 import { ColorRing } from "react-loader-spinner";
 import { Button } from "../../shared/Button/Button";
 import { Oval } from "react-loader-spinner";
-import { ReactComponent as IconApproved } from "../../assets/svg/IconApproved.svg";
-import { ReactComponent as IconRejected } from "../../assets/svg/IconRejected.svg";
+import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
+import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import {
   usePrepareContractWrite,
   useContractWrite,
