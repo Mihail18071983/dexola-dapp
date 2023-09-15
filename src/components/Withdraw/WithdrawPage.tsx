@@ -10,35 +10,20 @@ import { Button } from "../../shared/Button/Button";
 import { Form } from "../Form/WithdrawForm";
 import { connectWallet } from "../../shared/utils/connectWallet";
 import {
-  usePeriodFinish,
-  useRewardRate,
-  useTotalStake,
-  useStakedBalance,
-  useUserBalance,
+  // useUserBalance,
+  useStakedBalance
 } from "../../hooks/contracts-api";
 import { formatted } from "../../shared/utils/formatUnits";
-import { currentTimeStamp } from "../../shared/utils/currentTimeStamp";
-
 export const WithdrawPage = () => {
   const { isConnected, isConnecting } = useAccount();
   const { connect, error } = useConnect();
-  const { data: periodFinish } = usePeriodFinish();
-  const { data: rewardRateData } = useRewardRate();
-  const { data: totalStakeData } = useTotalStake();
+  // const { data: userTokenBalanceData } = useUserBalance();
+
+ 
+  // const userTokenBalance = formatted(userTokenBalanceData);
+
   const { data: stakedBalanceData } = useStakedBalance();
-  const { data: userTokenBalanceData } = useUserBalance();
-  const rewardRate = formatted(rewardRateData);
-  const totalStake = formatted(totalStakeData);
-  const stakedBalance = formatted(stakedBalanceData);
-  const userTokenBalance = formatted(userTokenBalanceData);
-
-  const remaining = Number(periodFinish) - currentTimeStamp;
-  const available = remaining * rewardRate;
-
-  const rate = (
-    (stakedBalance * available) /
-    (totalStake + stakedBalance)
-  ).toFixed(2);
+  const stakedBalance = formatted(stakedBalanceData).toFixed(0);
 
   return (
     <div className={`${containerStyles.container} ${styles.stakeWrapper}`}>
@@ -77,8 +62,7 @@ export const WithdrawPage = () => {
         </>
       ) : (
         <Form
-          rewardRate={rate}
-          struBalance={Number(userTokenBalance).toFixed(0)}
+          stakedBalance={stakedBalance}
         />
       )}
     </div>

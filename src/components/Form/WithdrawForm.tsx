@@ -24,13 +24,12 @@ type FormData = {
 };
 
 interface IProps {
-  rewardRate: string;
-  struBalance: string | undefined;
+  stakedBalance: string | undefined;
 }
 
 const CONTRACT_STAKING_ADDRESS = import.meta.env.VITE_CONTRACT_STAKING_ADDRESS;
 
-export const Form = ({ rewardRate, struBalance }: IProps) => {
+export const Form = ({ stakedBalance }: IProps) => {
   const {
     register,
     handleSubmit,
@@ -61,13 +60,13 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
 
   const { config: stakingConfig } = usePrepareContractWrite({
     ...starRunnerStakingContractConfig,
-    functionName: "stake",
+    functionName: "withdraw",
     args: [BigInt(amountVAlue ? amountVAlue * 1e18 : "1000")],
   });
 
   const {
     data,
-    write: writeStaking,
+    write: writeWithdraw,
     error,
     isLoading,
     isError,
@@ -84,14 +83,14 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
         return;
       }
 
-      if (Number(struBalance) < amountVAlue) {
+      if (Number(stakedBalance) < amountVAlue) {
         return;
       }
 
       setAmount(amountVAlue);
 
       await writeToken?.();
-      writeStaking?.();
+      writeWithdraw?.();
 
       reset();
     } catch (error) {
@@ -126,11 +125,12 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
           <p className={styles.availableTotens}>
             <span className={styles.available}>Available:</span>
             <span className={styles.availableTokenValue}>
-              {struBalance ? struBalance : 0}
+              {stakedBalance ? stakedBalance : 0}
             </span>
             <span className={styles.availableTokenUnit}>STRU</span>
           </p>
         </div>
+
         <div className={styles.additionalWrapper}>
           <div className={styles.infomessageWrapper}>
             {isPending && (
@@ -142,7 +142,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
                   color="rgba(32, 254, 81, 1)"
                   secondaryColor="rgba(110, 117, 139, 1)"
                 />
-                <p>Adding {Amount} STRU to Staking</p>
+                <p>Withdrawing {Amount} STRU to the account</p>
               </>
             )}
             {isSuccess && (
@@ -152,7 +152,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
                 </div>
                 <p className={styles.successfullMessage}>
                   <span className={styles.struQuantity}>{Amount} STRU</span>
-                  <span> successfully added to Staking</span>
+                  <span> successfully added to account</span>
                 </p>
               </>
             )}
@@ -167,7 +167,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
                 </p>
               </>
             )}
-            {Number(struBalance) < amountVAlue && (
+            {Number(stakedBalance) < amountVAlue && (
               <div>
                 <div className={`${styles.iconWrapper} ${styles.rejected}`}>
                   <IconRejected />
