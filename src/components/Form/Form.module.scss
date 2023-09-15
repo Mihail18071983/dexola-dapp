@@ -8,8 +8,15 @@
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 40px;
-  flex: 1 1 auto;
+  @media screen and (max-width: 743px) {
+    flex: 1 1 auto;
+  }
+
   @media screen and (min-width: 744px) {
+    padding-top: 32px;
+    padding-bottom: 32px;
+    padding-left: 24px;
+    padding-right: 32px;
     border: 1px solid var(--accent-blue);
   }
 }
@@ -41,6 +48,7 @@
   align-items: baseline;
   gap: 4px;
 }
+
 .rewardsName {
   color: var(--light-grey);
   font-family: Roboto Mono;
@@ -79,7 +87,9 @@
 
 .label {
   position: relative;
+  display: block;
   text-align: center;
+  margin-bottom: 34px;
 }
 
 .input {
@@ -116,6 +126,7 @@
     letter-spacing: -0.32px;
     padding-top: 11px;
     padding-bottom: 11px;
+    max-width: 391px;
   }
 
   @media screen and (min-width: 1440px) {
@@ -124,7 +135,6 @@
     font-size: 18px;
     line-height: 1.33;
     letter-spacing: -0.36px;
-    max-width: 391px;
   }
 }
 
@@ -142,32 +152,63 @@
   letter-spacing: 0.26px;
 }
 
-.formLabelConteiner {
-  position: relative;
-  margin-bottom: 32px;
+.availableTotens {
+  display: flex;
+  align-items: center;
+  @media screen and (min-width: 744px) {
+    margin-bottom: 62px;
+  }
 }
 
-.showPasswordButton {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: transparent;
-  border: none;
-  margin: 0;
-  line-height: 0;
-  padding: 10px;
+.available {
+  color: var(--light-grey);
+  font-family: Roboto Mono;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.28px;
+  margin-right: 8px;
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    letter-spacing: -0.32px;
+  }
+}
+
+.availableTokenValue {
   color: var(--white);
+  font-family: Roboto Mono;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.32px;
+  margin-right: 4px;
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    letter-spacing: -0.32px;
+  }
+}
+
+.availableTokenUnit {
+  color: var(--White, #fff);
+  font-family: Roboto Mono;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.32px;
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    letter-spacing: -0.32px;
+  }
 }
 
 .btn {
   width: 100%;
   @media screen and (min-width: 744px) {
-    width: 130px;
-    margin-left: 0;
-    margin-right: auto;
+    width: max-content;
   }
 }
+
+
 
 .btnContent {
   margin-left: auto;
@@ -178,16 +219,45 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width:32px;
+  min-width: 32px;
+  width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color:rgba(32, 254, 81, 1);
+  background-color: rgba(32, 254, 81, 1);
 }
 
 .rejected {
-  background-color: #FE2D20;;
+  background-color: #fe2d20;
 }
 
 .infomessageWrapper {
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 36px;
+  gap: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  @media screen and (min-width:744px) {
+    position: absolute;
+    bottom: 29px;
+    right: 24px;
+  }
+  @media screen and (min-width:1440px){
+    right: 40px;
+  }
 }
+
+.successfullMessage {
+  color: var(--white);
+  font-family: Roboto Mono;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.36;
+}
+
+.struQuantity {
+  font-weight: 700;
+  text-transform: uppercase;
+}
+

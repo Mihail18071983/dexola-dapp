@@ -1,5 +1,51 @@
 .main {
-  flex:1 1 auto;
+  flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+}
+.menuWrapper {
+  @media screen and (min-width: 744px) {
+    margin-left: 0;
+  }
+}
+.stakeMenu {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @media screen and (min-width: 744px) {
+    justify-content: flex-start;
+  }
+}
+
+.link {
+  position: relative;
+  color: var(--light-grey);
+  font-family: Roboto Mono;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.28px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  @media screen and (min-width: 744px) {
+    padding-left: 32px;
+    padding-right: 32px;
+    font-size: 16px;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+}
+
+.link:global(.active) {
+  color: var(--white);
+  &::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background-color: var(--accent-blue);
+  }
 }

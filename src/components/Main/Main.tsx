@@ -7,9 +7,12 @@ import { AppRoutes } from "../AppRoutes";
 export const Main: FC = () => {
   return (
     <main className={styles.main}>
-      <div className={containerStyles.container}>
+      <div className={`${containerStyles.container} ${styles.menuWrapper}`}>
         <nav className={styles.stakeMenu}>
-          <NavLink className={styles.link} to="/">
+          <NavLink
+            className={styles.link}
+            to="/"
+          >
             Stake
           </NavLink>
           <NavLink className={styles.link} to="/withdraw">
@@ -20,7 +23,7 @@ export const Main: FC = () => {
           </NavLink>
         </nav>
       </div>
-      <AppRoutes/>
+      <AppRoutes />
     </main>
   );
 };

@@ -37,12 +37,12 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     control,
     reset,
     watch,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm({
     defaultValues: {
       amount: "",
     },
-    mode: "onSubmit",
+    mode: "onBlur",
   });
 
   const [Amount, setAmount] = useState<number | null>(null);
@@ -112,88 +112,96 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
             </div>
           </h2>
           <label className={styles.label} htmlFor="amount">
-            <div className={styles.formLabelConteiner}>
-              <input
-                id="amount"
-                className={styles.input}
-                {...register("amount", {
-                  required: true,
-                })}
-                type="number"
-                placeholder="Enter stake amount"
-              />
-            </div>
+            
+            <input
+              id="amount"
+              className={styles.input}
+              {...register("amount", {
+                required: true,
+                validate: (value) =>
+                  Number(value) > 0 || "Must be a positive number",
+              })}
+              type="number"
+              placeholder="Enter stake amount"
+            />
+            {errors.amount && (
+              <p className={styles.errMessage}>{errors.amount.message}</p>
+            )}
           </label>
+
           <p className={styles.availableTotens}>
-            <span>Available:</span>
+            <span className={styles.available}>Available:</span>
             <span className={styles.availableTokenValue}>
-              {struBalance ? struBalance : 0}STRU
+              {struBalance ? struBalance : 0}
             </span>
+            <span className={styles.availableTokenUnit}>STRU</span>
           </p>
         </div>
-        <div className={styles.infomessageWrapper}>
-          {isPending && (
-            <div>
-              <Oval
-                width={32}
-                height={32}
-                strokeWidth={6}
-                color="rgba(32, 254, 81, 1)"
-                secondaryColor="rgba(110, 117, 139, 1)"
-              />
-              <p>Adding {Amount} STRU to Staking</p>
-            </div>
-          )}
-          {isSuccess && (
-            <div>
-              <div className={styles.iconWrapper}>
-                <IconApproved />
+        <div className={styles.additionalWrapper}>
+          <div className={styles.infomessageWrapper}>
+            {isPending && (
+              <>
+                <Oval
+                  width={32}
+                  height={32}
+                  strokeWidth={6}
+                  color="rgba(32, 254, 81, 1)"
+                  secondaryColor="rgba(110, 117, 139, 1)"
+                />
+                <p>Adding {Amount} STRU to Staking</p>
+              </>
+            )}
+            {isSuccess && (
+              <>
+                <div className={styles.iconWrapper}>
+                  <IconApproved />
+                </div>
+                <p className={styles.successfullMessage}>
+                  <span className={styles.struQuantity}>{Amount} STRU</span>
+                  <span> successfully added to Staking</span>
+                </p>
+              </>
+            )}
+            {isError && (
+              <>
+                <div className={`${styles.iconWrapper} ${styles.rejected}`}>
+                  <IconRejected />
+                </div>
+                <p>
+                  <span>Connection Error.</span>
+                  <span>Please try again</span>
+                </p>
+              </>
+            )}
+            {Number(struBalance) < amountVAlue && (
+              <div>
+                <div className={`${styles.iconWrapper} ${styles.rejected}`}>
+                  <IconRejected />
+                </div>
+                <p>
+                  <span>You don't have enough tokens.</span>
+                  <span>Please try again</span>
+                </p>
               </div>
-              <p>
-                <span>{Amount} STRU</span>
-                <span>successfully added to Staking</span>
-              </p>
-            </div>
-          )}
-          {isError && (
-            <div>
-              <div className={`${styles.iconWrapper} ${styles.rejected}`}>
-                <IconRejected />
-              </div>
-              <p>
-                <span>Connection Error.</span>
-                <span>Please try again</span>
-              </p>
-            </div>
-          )}
-          {Number(struBalance) < amountVAlue && (
-            <div>
-              <div className={`${styles.iconWrapper} ${styles.rejected}`}>
-                <IconRejected />
-              </div>
-              <p>
-                <span>You don't have enough tokens.</span>
-                <span>Please try again</span>
-              </p>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
 
-        <Button className={styles.btn} type="submit">
-          {isSubmitting ? (
-            <ColorRing
-              visible={true}
-              height="80"
-              width="80"
-              ariaLabel="blocks-loading"
-              wrapperStyle={{}}
-              wrapperClass="blocks-wrapper"
-              colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
-            />
-          ) : (
-            <span className={styles.btnContent}>Stake</span>
-          )}
-        </Button>
+          <Button className={styles.btn} type="submit">
+            {isSubmitting ? (
+              <ColorRing
+                visible={true}
+                height="80"
+                width="80"
+                ariaLabel="blocks-loading"
+                wrapperStyle={{}}
+                wrapperClass="blocks-wrapper"
+                colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+              />
+            ) : (
+              <span className={styles.btnContent}>Stake</span>
+            )}
+          </Button>
+        </div>
       </form>
       <DevTool control={control} />
     </>

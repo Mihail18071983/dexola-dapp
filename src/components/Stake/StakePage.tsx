@@ -7,7 +7,7 @@ import { ReactComponent as WalletCraditCard } from "../../assets/svg/walletCredi
 import { ReactComponent as CrossIcon } from "../../assets/svg/cross.svg";
 import { SubTitle } from "../SubTitle/SubTitle";
 import { Button } from "../../shared/Button/Button";
-import { Form } from "../Form/Form";
+import { Form } from "../Form/StakeForm";
 import { connectWallet } from "../../shared/utils/connectWallet";
 import {
   usePeriodFinish,
@@ -26,9 +26,6 @@ export const StakePage = () => {
   const { data: totalStakeData } = useTotalStake();
   const { data: stakedBalanceData } = useStakedBalance();
   const { data: userTokenBalanceData } = useUserBalance();
-
-
-
   const rewardRate = formatted(rewardRateData);
   const totalStake = formatted(totalStakeData);
   const stakedBalance = formatted(stakedBalanceData);
