@@ -3,6 +3,7 @@ import { useAccount, useConnect } from "wagmi";
 import { connectWallet } from "../../shared/utils/connectWallet";
 import { formatted } from "../../shared/utils/formatUnits";
 import { currentTimeStamp } from "../../shared/utils/currentTimeStamp";
+import { truncateAddress } from "../../shared/utils/truncateAddress";
 
 import {
   useStakedBalance,
@@ -19,7 +20,8 @@ import { Oval } from "react-loader-spinner";
 import { Logo } from "../../shared/svgComponents/Logo";
 import { Button } from "../../shared/Button/Button";
 import { Title } from "../Title/Title";
-import { Help } from "../../shared/svgComponents/Help";
+import earthImage from "../../assets/images/earth.jpg";
+import { ReactComponent as CryptoCurrency } from "../../assets/svg/cryptocurrency.svg";
 
 export const Header: FC = () => {
   const DAY_Duration = 24 * 60 * 60;
@@ -39,12 +41,14 @@ export const Header: FC = () => {
   const totalStakeUsers = formatted(totalStakeUsersData);
   const rewardsAvailable = formatted(rewardData).toFixed(0);
 
+  const trancatedAdress = truncateAddress(address!);
+
   const Days = (
     (Number(periodFinish) - currentTimeStamp) /
     DAY_Duration
   ).toFixed(0);
 
-  const APR = ((totalRewardForPeriod * 100) / totalStakeUsers).toFixed(0);
+  const APR = ((totalRewardForPeriod * 100) / totalStakeUsers).toFixed(0) || 0;
 
   return (
     <header className={styles.header}>
@@ -73,40 +77,59 @@ export const Header: FC = () => {
               )}
             </Button>
           ) : (
-            <>
-              <p>Balance: {Number(tokenBalanceValue).toFixed(0)} STRU</p>
-              <div className={styles.clienInfo}>
-                <p>
-                  <span>{Number(userEtherBalance?.formatted).toFixed(2)}</span>
-                  <span>ETH</span>
+            <div className={styles.clientInfoWrapper}>
+              <div className={styles.balanceWrapper}>
+                <img
+                  className={styles.balanceImg}
+                  width={32}
+                  height={32}
+                  src={earthImage}
+                  alt="earthIcon"
+                />
+                <p className={styles.balance}>
+                  {Number(tokenBalanceValue).toFixed(0)} STRU
                 </p>
-                <p>{address}</p>
               </div>
-            </>
+
+              <div className={styles.clientInfo}>
+                <p className={styles.currency}>
+                  <CryptoCurrency />
+                  <span>
+                    {Number(userEtherBalance?.formatted).toFixed(2)} ETH
+                  </span>
+                </p>
+                <p className={styles.userAddress}>{trancatedAdress}</p>
+              </div>
+            </div>
           )}
         </div>
         {isConnected && (
           <div className={styles.infoWrapper}>
-            <Title text="StarRunner Token staking" />
-            <p>
-              <span>{stakedBalance} STRU</span>
-              <span className={styles.stakedBalanceName}>
-                Staked balance
-                <Help width="24" heigth="24" />
-              </span>
-            </p>
-            <p>
-              <span>≈{APR}%</span> <span>APR</span>
-            </p>
-            <p>
-              <span>{Days}</span>
-              <span>DAYS</span>
-            </p>
-            <p>
-              <span>{rewardsAvailable}</span>
-              <span>STRU</span>
-              <span>Rewards</span>
-            </p>
+            <Title className={styles.title}  text="StarRunner Token staking" />
+            <div className={styles.userValueInfoWrapper}>
+              <p className={styles.userStakedBalance}>
+                <span className={styles.valueUnitWrapper}>
+                  <span className={styles.stakedBalanceValue}>
+                    {stakedBalance}
+                  </span>{" "}
+                  <span className={styles.stakedBalanceUnit}>STRU</span>
+                </span>
+                <span className={styles.stakedBalanceName}>Staked balance</span>
+              </p>
+              <p className={styles.apr}>
+                <span className={styles.aprValue}>≈{APR}%</span>
+                <span className={styles.aprUnit}>APR</span>
+              </p>
+              <p>
+                <span>{Days}</span>
+                <span>DAYS</span>
+              </p>
+              <p>
+                <span>{rewardsAvailable}</span>
+                <span>STRU</span>
+                <span>Rewards</span>
+              </p>
+            </div>
           </div>
         )}
       </div>

@@ -10,6 +10,12 @@
   justify-content: space-between;
   align-items: center;
 }
+.title {
+  margin-bottom: 26px;
+  @media screen and (min-width: 744px) {
+    margin-bottom: 16px;
+  }
+}
 
 .link {
   cursor: pointer;
@@ -24,14 +30,13 @@
   line-height: 1.71;
   letter-spacing: 0.28px;
   transition: background-color 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-  @media screen and (min-width:744px) {
+  @media screen and (min-width: 744px) {
     font-size: 16px;
     line-height: 1.5;
     letter-spacing: 0.32px;
   }
 
-  @media screen and (min-width:1440px){
-    
+  @media screen and (min-width: 1440px) {
   }
 
   &::before {
@@ -46,26 +51,262 @@
   }
 }
 
-  .logo {
-    color:var(--white);
-    background-color: transparent;
-    transition: color 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-    &:hover {
-      color: var(--accent-blue);
+.logo {
+  color: var(--white);
+  background-color: transparent;
+  transition: color 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+  &:hover {
+    color: var(--accent-blue);
+  }
+  @media screen and (min-width: 744px) {
+    padding-right: 118px;
+  }
+  @media screen {
+  }
+}
+
+.userValueInfoWrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.icon {
+  fill: currentColor;
+}
+
+.stakedBalanceName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.24px;
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.32px;
+  }
+  @media screen and (min-width: 1440px) {
+    &::after {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      content: "";
+      background-image: url("../../assets/svg/helpIcon.svg");
+      width: 24px;
+      height: 24px;
+      background-size: contain;
     }
-    @media screen and (min-width: 744px) {
-      padding-right: 118px;
-    }
-    @media screen {
-      
+  }
+}
+
+.apr {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.aprValue {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--white);
+  font-family: Roboto Mono;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  @media screen and (min-width: 744px) {
+    font-size: 28px;
+    line-height: 1.71;
+  }
+  @media screen and (max-width: 743px) {
+    &::after {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      content: "";
+      background-image: url("../../assets/svg/helpIconLightGrey.svg");
+      width: 13px;
+      height: 13px;
+      background-size: contain;
+      padding: 1px;
     }
   }
 
-  .icon {
-    fill: currentColor;
+  @media screen and (min-width: 744px) and (max-width: 1439px) {
+    &::after {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      content: "";
+      background-image: url("../../assets/svg/helpIconWhite.svg");
+      width: 24px;
+      height: 24px;
+      background-size: contain;
+    }
+  }
+}
+
+.aprUnit {
+  font-family: Roboto Mono;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.24px;
+  display: flex;
+  align-items: center;
+  gap:8px;
+  &::after {
+    @media screen and (min-width: 1440px) {
+      display: flex;
+      align-items: center;
+      content: "";
+      background-image: url("../../assets/svg/helpIconWhite.svg");
+      width: 24px;
+      height: 24px;
+      background-size: contain;
+    }
+  }
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    letter-spacing: -0.32px;
+  }
+}
+
+.currency {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.userAddress {
+  @media screen and (max-width: 743px) {
+    display: none;
+  }
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  &::before {
+    content: "i";
+    font-family: Kanit;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.14;
+    text-transform: uppercase;
+  }
+}
+
+.clientInfoWrapper {
+  display: flex;
+  font-family: Kanit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+  letter-spacing: 0.12px;
+  text-transform: uppercase;
+
+  @media screen and (min-width: 744px) {
+    gap: 16px;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1.14;
+  }
+  @media screen and (min-width: 1440px) {
+    gap: 24px;
+  }
+}
+
+.clientInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.balanceWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.balanceImg {
+  border-radius: 50%;
+}
+
+.userStakedBalance {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.valueUnitWrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.stakedBalanceValue {
+  color: var(--white);
+  font-family: Roboto Mono;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.36px;
+  @media screen and (min-width: 744px) {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.71px;
+  }
+}
+
+.stakedBalanceUnit {
+  color: var(--white);
+  font-family: Roboto Mono;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.67;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  @media screen and (max-width: 743px) {
+    &::after {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      content: "";
+      background-image: url("../../assets/svg/helpIconLightGrey.svg");
+      width: 13px;
+      height: 13px;
+      background-size: contain;
+      padding: 1px;
+    }
   }
 
-  .stakedBalanceName {
-    display: flex;
-    align-items: center;
+  @media screen and (min-width: 744px) and (max-width: 1439px) {
+    &::after {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      content: "";
+      background-image: url("../../assets/svg/helpIconWhite.svg");
+      width: 24px;
+      height: 24px;
+      background-size: contain;
+    }
   }
+
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+}
