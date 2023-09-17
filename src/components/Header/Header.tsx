@@ -38,10 +38,12 @@ export const Header: FC = () => {
   const tokenBalanceValue = formatted(userTokenBalanceData);
   const stakedBalance = formatted(stakedBalanceData).toFixed(0);
   const totalRewardForPeriod = formatted(numberRewordsForPeriodData);
-  const totalStakeUsers = formatted(totalStakeUsersData);
+  const totalStakeUsers = formatted(
+    totalStakeUsersData ? totalStakeUsersData : 0
+  );
   const rewardsAvailable = formatted(rewardData).toFixed(0);
 
-  const trancatedAdress = truncateAddress(address!);
+  const trancatedAdress = address ? truncateAddress(address) : "";
 
   const Days = (
     (Number(periodFinish) - currentTimeStamp) /
@@ -105,29 +107,27 @@ export const Header: FC = () => {
         </div>
         {isConnected && (
           <div className={styles.infoWrapper}>
-            <Title className={styles.title}  text="StarRunner Token staking" />
+            <Title className={styles.title} text="StarRunner Token staking" />
             <div className={styles.userValueInfoWrapper}>
               <p className={styles.userStakedBalance}>
-                <span className={styles.valueUnitWrapper}>
-                  <span className={styles.stakedBalanceValue}>
-                    {stakedBalance}
-                  </span>{" "}
-                  <span className={styles.stakedBalanceUnit}>STRU</span>
-                </span>
+                <span className={styles.stakedBalanceValue}>
+                  {stakedBalance}
+                </span>{" "}
+                <span className={styles.stakedBalanceUnit}>STRU</span>
                 <span className={styles.stakedBalanceName}>Staked balance</span>
               </p>
               <p className={styles.apr}>
                 <span className={styles.aprValue}>≈{APR}%</span>
                 <span className={styles.aprUnit}>APR</span>
               </p>
-              <p>
-                <span>{Days}</span>
-                <span>DAYS</span>
+              <p className={styles.days}>
+                <span className={styles.daysValue}>{Days}</span>
+                <span className={styles.daysUnit}>DAYS</span>
               </p>
-              <p>
-                <span>{rewardsAvailable}</span>
-                <span>STRU</span>
-                <span>Rewards</span>
+              <p className={styles.avilableReawards}>
+                <span className={styles.rewardsValue}>{rewardsAvailable}</span>{" "}
+                <span className={styles.rewardsUnit}>STRU</span>
+                <span className={styles.rewardsName}>Rewards</span>
               </p>
             </div>
           </div>

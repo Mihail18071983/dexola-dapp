@@ -67,7 +67,7 @@
 
 .userValueInfoWrapper {
   display: flex;
-  align-items: baseline;
+  align-items:baseline;
   gap: 20px;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -77,7 +77,7 @@
   fill: currentColor;
 }
 
-.stakedBalanceName {
+.stakedBalanceName, .rewardsName {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -97,7 +97,7 @@
       align-items: center;
       justify-content: center;
       content: "";
-      background-image: url("../../assets/svg/helpIcon.svg");
+      background-image: url("../../assets/svg/helpIconWhite.svg");
       width: 24px;
       height: 24px;
       background-size: contain;
@@ -105,14 +105,16 @@
   }
 }
 
-.apr {
+.apr,
+.days,
+.avilableReawards {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   gap: 12px;
 }
 
-.aprValue {
+.aprValue  {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -162,7 +164,7 @@
   letter-spacing: -0.24px;
   display: flex;
   align-items: center;
-  gap:8px;
+  gap: 8px;
   &::after {
     @media screen and (min-width: 1440px) {
       display: flex;
@@ -174,6 +176,30 @@
       background-size: contain;
     }
   }
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    letter-spacing: -0.32px;
+  }
+}
+
+.daysValue {
+  font-family: Roboto Mono;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: normal;
+  text-transform: uppercase;
+  @media screen and (min-width: 744px) {
+    font-size: 28px;
+    line-height: 1.71;
+  }
+}
+
+.daysUnit {
+  font-family: Roboto Mono;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.24px;
   @media screen and (min-width: 744px) {
     font-size: 16px;
     letter-spacing: -0.32px;
@@ -247,13 +273,9 @@
   flex-wrap: wrap;
 }
 
-.valueUnitWrapper {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
 
-.stakedBalanceValue {
+
+.stakedBalanceValue, .rewardsValue {
   color: var(--white);
   font-family: Roboto Mono;
   font-size: 18px;
@@ -263,11 +285,11 @@
   @media screen and (min-width: 744px) {
     font-size: 28px;
     font-weight: 700;
-    line-height: 1.71px;
+    line-height: 1.71;
   }
 }
 
-.stakedBalanceUnit {
+.stakedBalanceUnit, .rewardsUnit {
   color: var(--white);
   font-family: Roboto Mono;
   font-size: 12px;
