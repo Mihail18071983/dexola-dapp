@@ -2,7 +2,7 @@ import {
   starRunnerTokenContractConfig,
   starRunnerStakingContractConfig,
 } from "../shared/utils/contracts";
-import { useAccount, useBalance, useContractRead } from "wagmi";
+import { useAccount, useBalance, useContractRead, usePrepareContractWrite, useContractWrite } from "wagmi";
 
 export const usePeriodFinish = () => {
   const { data, isSuccess } = useContractRead({
@@ -82,3 +82,14 @@ export const useUserEther = () => {
   });
   return { data, isSuccess };
 };
+
+
+export const useClaimRewards = () => {
+  const {config}=usePrepareContractWrite({
+    ...starRunnerStakingContractConfig, 
+    functionName: "claimReward",
+  });
+  const { write: claim, data } = useContractWrite(config);
+  return { claim, data }
+};
+

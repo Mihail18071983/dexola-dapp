@@ -74,7 +74,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     isError,
   } = useContractWrite(stakingConfig);
 
-  const { isLoading: isPending, isSuccess } = useWaitForTransaction({
+  const { isLoading: isPending,  isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
 

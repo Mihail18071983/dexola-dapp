@@ -9,18 +9,12 @@ import { SubTitle } from "../SubTitle/SubTitle";
 import { Button } from "../../shared/Button/Button";
 import { Form } from "../Form/WithdrawForm";
 import { connectWallet } from "../../shared/utils/connectWallet";
-import {
-  // useUserBalance,
-  useStakedBalance
-} from "../../hooks/contracts-api";
+import { useStakedBalance } from "../../hooks/contracts-api";
 import { formatted } from "../../shared/utils/formatUnits";
+
 export const WithdrawPage = () => {
   const { isConnected, isConnecting } = useAccount();
   const { connect, error } = useConnect();
-  // const { data: userTokenBalanceData } = useUserBalance();
-
- 
-  // const userTokenBalance = formatted(userTokenBalanceData);
 
   const { data: stakedBalanceData } = useStakedBalance();
   const stakedBalance = formatted(stakedBalanceData).toFixed(0);
@@ -61,9 +55,7 @@ export const WithdrawPage = () => {
           </Button>
         </>
       ) : (
-        <Form
-          stakedBalance={stakedBalance}
-        />
+        <Form stakedBalance={stakedBalance} />
       )}
     </div>
   );
