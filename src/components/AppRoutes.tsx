@@ -1,9 +1,9 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-import { StakePage } from "./Stake/StakePage";
-import { WithdrawPage } from "./Withdraw/WithdrawPage";
-import { ClaimReawardsPage } from "./ClaimRewards/ClaimRewardsPage";
+import { StakePage } from "./Pages/StakePage";
+import { WithdrawPage } from "./Pages/WithdrawPage";
+import { ClaimReawardsPage } from "./Pages/ClaimRewardsPage";
 
 export const AppRoutes = () => {
   return (

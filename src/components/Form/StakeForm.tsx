@@ -14,6 +14,8 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 
+import { useUserBalance } from "../../hooks/contracts-api";
+
 import {
   starRunnerStakingContractConfig,
   starRunnerTokenContractConfig,
@@ -45,6 +47,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     mode: "onBlur",
   });
 
+  const { data: userTokenBalanceData } = useUserBalance();
 
   const [Amount, setAmount] = useState<number | null>(null);
 
@@ -55,7 +58,10 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
   const { config: tokenConfig } = usePrepareContractWrite({
     ...starRunnerTokenContractConfig,
     functionName: "approve",
-    args: [CONTRACT_STAKING_ADDRESS, BigInt(20000 * 1e18)],
+    args: [
+      CONTRACT_STAKING_ADDRESS,
+      userTokenBalanceData || BigInt(20000 * 1e18),
+    ],
   });
 
   const { writeAsync: writeToken } = useContractWrite(tokenConfig);
@@ -74,7 +80,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     isError,
   } = useContractWrite(stakingConfig);
 
-  const { isLoading: isPending,  isSuccess } = useWaitForTransaction({
+  const { isLoading: isPending, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
 
@@ -113,7 +119,6 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
             </div>
           </h2>
           <label className={styles.label} htmlFor="amount">
-            
             <input
               id="amount"
               className={styles.input}

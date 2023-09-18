@@ -51,10 +51,8 @@ export const Header: FC = () => {
   ).toFixed(0);
 
   const APR = ((totalRewardForPeriod * 100) / totalStakeUsers).toFixed(0) || 0;
-  console.log(totalRewardForPeriod);
-  console.log(totalStakeUsers);
-  console.log(APR);
-
+  
+  
   return (
     <header className={styles.header}>
       <div className={containerStyles.container}>
