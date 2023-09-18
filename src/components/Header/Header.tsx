@@ -51,6 +51,9 @@ export const Header: FC = () => {
   ).toFixed(0);
 
   const APR = ((totalRewardForPeriod * 100) / totalStakeUsers).toFixed(0) || 0;
+  console.log(totalRewardForPeriod);
+  console.log(totalStakeUsers);
+  console.log(APR);
 
   return (
     <header className={styles.header}>
@@ -65,8 +68,7 @@ export const Header: FC = () => {
               onClick={() => connectWallet({ connect, error })}
               type="button"
             >
-              Connect Wallet{" "}
-              {isConnecting && (
+              {isConnecting ? (
                 <Oval
                   ariaLabel="loading-indicator"
                   height={32}
@@ -76,7 +78,8 @@ export const Header: FC = () => {
                   color="blue"
                   secondaryColor="white"
                 />
-              )}
+              ): (<span>Connect Wallet</span>)
+            }
             </Button>
           ) : (
             <div className={styles.clientInfoWrapper}>
@@ -105,7 +108,7 @@ export const Header: FC = () => {
             </div>
           )}
         </div>
-        {/* {isConnected && ( */}
+        {isConnected && (
           <div className={styles.infoWrapper}>
             <Title className={styles.title} text="StarRunner Token staking" />
             <div className={styles.userValueInfoWrapper}>
@@ -131,7 +134,7 @@ export const Header: FC = () => {
               </p>
             </div>
           </div>
-        {/* )} */}
+         )}
       </div>
     </header>
   );

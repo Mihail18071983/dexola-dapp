@@ -34,25 +34,23 @@ export const WithdrawPage = () => {
             />
           </div>
           <Button
-            disabled={isConnecting}
-            className={styles.btn}
-            onClick={() => connectWallet({ connect, error })}
-            type="button"
-          >
-            {" "}
-            Connect Wallet
-            {isConnecting && (
-              <Oval
-                ariaLabel="loading-indicator"
-                height={32}
-                width={32}
-                strokeWidth={2}
-                strokeWidthSecondary={1}
-                color="blue"
-                secondaryColor="white"
-              />
-            )}
-          </Button>
+              disabled={isConnecting}
+              onClick={() => connectWallet({ connect, error })}
+              type="button"
+            >
+              {isConnecting ? (
+                <Oval
+                  ariaLabel="loading-indicator"
+                  height={32}
+                  width={32}
+                  strokeWidth={2}
+                  strokeWidthSecondary={1}
+                  color="blue"
+                  secondaryColor="white"
+                />
+              ): (<span>Connect Wallet</span>)
+            }
+            </Button>
         </>
       ) : (
         <Form stakedBalance={stakedBalance} />

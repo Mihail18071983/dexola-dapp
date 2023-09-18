@@ -4,6 +4,7 @@
   padding: 12px 40px;
   border: none;
   outline: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   background-color: var(--button-color);
@@ -20,6 +21,5 @@
 
   @media screen and (min-width: 744px) {
     font-size: 16px;
-    display: block;
   }
 }

@@ -38,9 +38,9 @@ export const StakePage = () => {
  
 
   return (
-    <div className={`${containerStyles.container} ${styles.stakeWrapper}`}>
+    <div className={`${containerStyles.container} ${styles.wrapper}`}>
       {!isConnected ? (
-        <>
+        <div className={styles.stakeWrapper}>
           <div className={styles.container}>
             <div className={styles.iconWrapper}>
               <WalletCraditCard />
@@ -51,27 +51,25 @@ export const StakePage = () => {
               text="To start staking you need to connect you wallet first"
             />
           </div>
-          <Button
-            disabled={isConnecting}
-            className={styles.btn}
-            onClick={() => connectWallet({ connect, error })}
-            type="button"
-          >
-            {" "}
-            Connect Wallet
-            {isConnecting && (
-              <Oval
-                ariaLabel="loading-indicator"
-                height={32}
-                width={32}
-                strokeWidth={2}
-                strokeWidthSecondary={1}
-                color="blue"
-                secondaryColor="white"
-              />
-            )}
-          </Button>
-        </>
+          <Button className={styles.button}
+              disabled={isConnecting}
+              onClick={() => connectWallet({ connect, error })}
+              type="button"
+            >
+              {isConnecting ? (
+                <Oval
+                  ariaLabel="loading-indicator"
+                  height={32}
+                  width={32}
+                  strokeWidth={2}
+                  strokeWidthSecondary={1}
+                  color="blue"
+                  secondaryColor="white"
+                />
+              ): (<span>Connect Wallet</span>)
+            }
+            </Button>
+        </div>
       ) : (
         <Form rewardRate={rate} struBalance={Number(userTokenBalance).toFixed(0)} />
       )}

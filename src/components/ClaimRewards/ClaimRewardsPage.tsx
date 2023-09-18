@@ -35,13 +35,10 @@ export const ClaimReawardsPage = () => {
           </div>
           <Button
             disabled={isConnecting}
-            className={styles.btn}
             onClick={() => connectWallet({ connect, error })}
             type="button"
           >
-            {" "}
-            Connect Wallet
-            {isConnecting && (
+            {isConnecting ? (
               <Oval
                 ariaLabel="loading-indicator"
                 height={32}
@@ -51,6 +48,8 @@ export const ClaimReawardsPage = () => {
                 color="blue"
                 secondaryColor="white"
               />
+            ) : (
+              <span>Connect Wallet</span>
             )}
           </Button>
         </>
