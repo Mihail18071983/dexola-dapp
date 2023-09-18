@@ -3,11 +3,13 @@
   display: flex;
   flex-direction: column;
 }
+
 .menuWrapper {
   @media screen and (min-width: 744px) {
     margin-left: 0;
   }
 }
+
 .stakeMenu {
   margin-left: 0;
   margin-right: 0;
