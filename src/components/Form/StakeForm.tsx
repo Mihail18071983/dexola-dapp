@@ -55,7 +55,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
   const { config: tokenConfig } = usePrepareContractWrite({
     ...starRunnerTokenContractConfig,
     functionName: "approve",
-    args: [CONTRACT_STAKING_ADDRESS, BigInt(2000 * 1e18)],
+    args: [CONTRACT_STAKING_ADDRESS, BigInt(20000 * 1e18)],
   });
 
   const { writeAsync: writeToken } = useContractWrite(tokenConfig);

@@ -20,7 +20,7 @@ export const WithdrawPage = () => {
   const stakedBalance = formatted(stakedBalanceData).toFixed(0);
 
   return (
-    <div className={`${containerStyles.container} ${styles.stakeWrapper}`}>
+    <div className={`${containerStyles.container} ${styles.withdrawWrapper}`}>
       {!isConnected ? (
         <>
           <div className={styles.container}>

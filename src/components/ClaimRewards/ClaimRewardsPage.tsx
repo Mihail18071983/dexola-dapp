@@ -20,7 +20,7 @@ export const ClaimReawardsPage = () => {
   const rewardsAvailable = formatted(rewardData).toFixed(0);
 
   return (
-    <div className={`${containerStyles.container} ${styles.stakeWrapper}`}>
+    <div className={`${containerStyles.container} ${styles.claimWrapper}`}>
       {!isConnected ? (
         <>
           <div className={styles.container}>
