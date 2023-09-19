@@ -16,8 +16,6 @@ const { chains, publicClient } = configureChains(
   ]
 );
 
-
-console.log(import.meta.env.VITE_MODE);
 export const config = createConfig({
   autoConnect: true,
   connectors: [

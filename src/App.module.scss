@@ -1,0 +1,19 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1 1 auto;
+  background-color: var(--background);
+  @media screen and (max-width: 743px) {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    overflow: hidden;
+  }
+  @media screen and (min-width: 1440px) {
+    background-image: radial-gradient(
+      50% 50% at 50% 100%,
+      #2f4bc9 0%,
+      #080808 100%
+    );
+  }
+}

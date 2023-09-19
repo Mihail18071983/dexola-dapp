@@ -1,8 +1,13 @@
 .header {
   padding: 15px 0;
-  background-color: var(--accent-blue);
   width: 100%;
   top: 0;
+  background-image: radial-gradient(
+    100% 100% at 50% 100%,
+    #2f4bc9 0%,
+    #080808 100%
+  );
+  background-color: var(--accent-blue);
 }
 
 .menuWrapper {
@@ -67,7 +72,7 @@
 
 .userValueInfoWrapper {
   display: flex;
-  align-items:baseline;
+  align-items: baseline;
   gap: 20px;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -77,7 +82,8 @@
   fill: currentColor;
 }
 
-.stakedBalanceName, .rewardsName {
+.stakedBalanceName,
+.rewardsName {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -114,7 +120,7 @@
   gap: 12px;
 }
 
-.aprValue  {
+.aprValue {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -229,9 +235,18 @@
   }
 }
 
+.infoWrapper {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  @media screen and (min-width: 744px) {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+}
+
 .clientInfoWrapper {
   display: flex;
-  gap:12px;
+  gap: 12px;
   font-family: Kanit;
   font-size: 12px;
   font-weight: 500;
@@ -274,9 +289,8 @@
   flex-wrap: wrap;
 }
 
-
-
-.stakedBalanceValue, .rewardsValue {
+.stakedBalanceValue,
+.rewardsValue {
   color: var(--white);
   font-family: Roboto Mono;
   font-size: 18px;
@@ -290,7 +304,8 @@
   }
 }
 
-.stakedBalanceUnit, .rewardsUnit {
+.stakedBalanceUnit,
+.rewardsUnit {
   color: var(--white);
   font-family: Roboto Mono;
   font-size: 12px;
