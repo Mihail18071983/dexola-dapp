@@ -106,7 +106,7 @@ export const Header: FC = () => {
             </div>
           )}
         </div>
-        {isConnected && (
+        {/* {isConnected && ( */}
           <div className={styles.infoWrapper}>
             <Title className={styles.title} text="StarRunner Token staking" />
             <div className={styles.userValueInfoWrapper}>
@@ -132,7 +132,7 @@ export const Header: FC = () => {
               </p>
             </div>
           </div>
-         )}
+         {/* )} */}
       </div>
     </header>
   );

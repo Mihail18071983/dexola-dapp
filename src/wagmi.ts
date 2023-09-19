@@ -1,9 +1,4 @@
-import {
-  mainnet,
-  sepolia,
-  configureChains,
-  createConfig,
-} from "wagmi";
+import { sepolia, mainnet, configureChains, createConfig } from "wagmi";
 
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
@@ -14,13 +9,15 @@ import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 
 const { chains, publicClient } = configureChains(
-  [mainnet, sepolia],
+  [...(import.meta.env.VITE_MODE === "development" ? [sepolia] : [sepolia, mainnet])],
   [
     infuraProvider({ apiKey: "9ec7254920bb40409a84fac1336ca84f" }),
     publicProvider(),
   ]
 );
 
+
+console.log(import.meta.env.VITE_MODE);
 export const config = createConfig({
   autoConnect: true,
   connectors: [
