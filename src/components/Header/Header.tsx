@@ -1,6 +1,5 @@
 import React, { FC } from "react";
-import { useAccount, useConnect } from "wagmi";
-import { connectWallet } from "../../shared/utils/connectWallet";
+import { useAccount } from "wagmi";
 import { formatted } from "../../shared/utils/formatUnits";
 import { currentTimeStamp } from "../../shared/utils/currentTimeStamp";
 import { truncateAddress } from "../../shared/utils/truncateAddress";
@@ -16,17 +15,15 @@ import {
 } from "../../hooks/contracts-api";
 import styles from "./Header.module.scss";
 import containerStyles from "../../Container.module.scss";
-import { Oval } from "react-loader-spinner";
 import { Logo } from "../../shared/svgComponents/Logo";
-import { Button } from "../../shared/Button/Button";
 import { Title } from "../Title/Title";
 import earthImage from "../../assets/images/earth.jpg";
 import { ReactComponent as CryptoCurrency } from "../../assets/svg/cryptocurrency.svg";
+import { ConnectionButton } from "../../shared/ConnectionButton/ConnectionButton";
 
 export const Header: FC = () => {
   const DAY_Duration = 24 * 60 * 60;
-  const { address, isConnected, isConnecting } = useAccount();
-  const { connect, error } = useConnect();
+  const { address, isConnected} = useAccount();
   const { data: stakedBalanceData } = useStakedBalance();
   const { data: totalStakeUsersData } = useTotalStake();
   const { data: periodFinish } = usePeriodFinish();
@@ -61,24 +58,8 @@ export const Header: FC = () => {
             <Logo className={styles.icon} width="34" height="20" />
           </button>
           {!isConnected ? (
-            <Button
-              disabled={isConnecting}
-              onClick={() => connectWallet({ connect, error })}
-              type="button"
-            >
-              {isConnecting ? (
-                <Oval
-                  ariaLabel="loading-indicator"
-                  height={32}
-                  width={32}
-                  strokeWidth={2}
-                  strokeWidthSecondary={1}
-                  color="blue"
-                  secondaryColor="white"
-                />
-              ): (<span>Connect Wallet</span>)
-            }
-            </Button>
+          <ConnectionButton/>
+          
           ) : (
             <div className={styles.clientInfoWrapper}>
               <div className={styles.balanceWrapper}>

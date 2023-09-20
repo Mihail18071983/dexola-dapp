@@ -47,6 +47,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     mode: "onBlur",
   });
 
+
   const { data: userTokenBalanceData } = useUserBalance();
 
   const [Amount, setAmount] = useState<number | null>(null);
@@ -75,8 +76,6 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
   const {
     data,
     write: writeStaking,
-    error,
-    isLoading,
     isError,
   } = useContractWrite(stakingConfig);
 

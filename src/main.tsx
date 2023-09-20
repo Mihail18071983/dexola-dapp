@@ -1,7 +1,9 @@
+
 import "./index.scss";
 import React from "react";
 import { WagmiConfig } from "wagmi";
-import {config} from "./wagmi"
+import { config, chains } from "./wagmi";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "@fontsource/kanit/400.css";
@@ -14,21 +16,22 @@ import { ToastContainer } from "react-toastify";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <WagmiConfig config={config}>
-<Router basename="/">
-    <App />
-    <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        />
-  </Router>
+      <RainbowKitProvider chains={chains} modalSize="wide">
+        <Router basename="/">
+          <App />
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
+        </Router>
+      </RainbowKitProvider>
     </WagmiConfig>
-  
-   </React.StrictMode>
+  </React.StrictMode>
 );
