@@ -7,7 +7,7 @@ import { formatted } from "../../shared/utils/formatUnits";
 import { useReward } from "../../hooks/contracts-api";
 import { Unregistered } from "../Unregistered/Unregistered";
 
-export const ClaimReawardsPage = () => {
+const ClaimReawardsPage = () => {
   const { isConnected } = useAccount();
 
 
@@ -24,3 +24,5 @@ export const ClaimReawardsPage = () => {
     </div>
   );
 };
+
+export default ClaimReawardsPage

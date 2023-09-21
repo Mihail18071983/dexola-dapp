@@ -13,8 +13,9 @@ import {
 } from "../../hooks/contracts-api";
 import { formatted } from "../../shared/utils/formatUnits";
 import { currentTimeStamp } from "../../shared/utils/currentTimeStamp";
-export const StakePage = () => {
-  const { isConnected} = useAccount();
+const StakePage = () => {
+  const { isConnected } = useAccount();
+  console.log(isConnected);
   const { data: periodFinish } = usePeriodFinish();
   const { data: rewardRateData } = useRewardRate();
   const { data: totalStakeData } = useTotalStake();
@@ -46,3 +47,5 @@ export const StakePage = () => {
     </div>
   );
 };
+
+export default StakePage

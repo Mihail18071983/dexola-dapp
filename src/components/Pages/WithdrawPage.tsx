@@ -7,7 +7,7 @@ import { useStakedBalance } from "../../hooks/contracts-api";
 import { formatted } from "../../shared/utils/formatUnits";
 import { Unregistered } from "../Unregistered/Unregistered";
 
-export const WithdrawPage = () => {
+ const WithdrawPage = () => {
   const { isConnected} = useAccount();
 
   const { data: stakedBalanceData } = useStakedBalance();
@@ -23,3 +23,5 @@ export const WithdrawPage = () => {
     </div>
   );
 };
+
+export default WithdrawPage;
