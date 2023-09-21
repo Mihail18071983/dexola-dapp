@@ -1,5 +1,4 @@
 import React from "react";
-import '@rainbow-me/rainbowkit/styles.css'
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from "../Button/Button";
 import { useAccount } from "wagmi";

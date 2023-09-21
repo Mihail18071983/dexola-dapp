@@ -30,7 +30,7 @@ export const StakePage = () => {
 
   const rate = (
     (stakedBalance * available) /
-    (totalStake + stakedBalance)
+    totalStake + stakedBalance
   ).toFixed(2);
 
   return (

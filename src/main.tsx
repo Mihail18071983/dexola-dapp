@@ -1,4 +1,5 @@
-
+import "./polyfills"
+import '@rainbow-me/rainbowkit/styles.css'
 import "./index.scss";
 import React from "react";
 import { WagmiConfig } from "wagmi";
