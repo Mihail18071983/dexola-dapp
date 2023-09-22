@@ -1,5 +1,6 @@
 @import "/node_modules/modern-normalize/modern-normalize.css";
 
+
 :root {
   --white: #ffffff;
   --black: #000000;
@@ -74,4 +75,10 @@ img {
 [data-rk] ._9pm4ki5 {
   margin-left: auto;
   margin-right: auto;
+}
+
+//toastify properties
+
+.Toastify__toast-theme--light {
+  background: transparent;
 }

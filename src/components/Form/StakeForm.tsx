@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Form.module.scss";
+import { toast } from "react-toastify";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { ColorRing } from "react-loader-spinner";
@@ -13,6 +14,8 @@ import {
   useAccount,
   useWaitForTransaction,
 } from "wagmi";
+
+import { Msg } from "../../shared/ErrorMsg/Msg";
 
 import { useUserBalance } from "../../hooks/contracts-api";
 
@@ -47,10 +50,18 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     mode: "onBlur",
   });
 
-
   const { data: userTokenBalanceData } = useUserBalance();
 
   const [Amount, setAmount] = useState<number | null>(null);
+
+  const successMsg = () =>
+    toast(
+      <Msg
+        text1={`${Amount} STRU`}
+        text2="successfully added to Staking"
+        Component={IconApproved}
+      />
+    );
 
   const amountVAlue = Number(watch("amount"));
 
@@ -73,14 +84,13 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
     args: [BigInt(amountVAlue ? amountVAlue * 1e18 : "1000")],
   });
 
-  const {
-    data,
-    write: writeStaking,
-    isError,
-  } = useContractWrite(stakingConfig);
+  const { data, write: writeStaking } = useContractWrite(stakingConfig);
 
-  const { isLoading: isPending, isSuccess } = useWaitForTransaction({
+  const { isLoading: isPending } = useWaitForTransaction({
     hash: data?.hash,
+    onSuccess() {
+      successMsg();
+    },
   });
 
   const onSubmit: SubmitHandler<FormData> = async () => {
@@ -101,7 +111,13 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
 
       reset();
     } catch (error) {
-      console.error("Error staking tokens:", error);
+      toast(
+        <Msg
+          text1="Connection Error"
+          text2="Please try again"
+          Component={IconRejected}
+        />
+      );
     }
   };
 
@@ -153,41 +169,18 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
                   color="rgba(32, 254, 81, 1)"
                   secondaryColor="rgba(110, 117, 139, 1)"
                 />
-                <p>Adding {Amount} STRU to Staking</p>
-              </>
-            )}
-            {isSuccess && (
-              <>
-                <div className={styles.iconWrapper}>
-                  <IconApproved />
-                </div>
-                <p className={styles.successfullMessage}>
-                  <span className={styles.struQuantity}>{Amount} STRU</span>
-                  <span> successfully added to Staking</span>
+                <p className={styles.pendingMSg}>
+                  Adding <span className={styles.tokenAmout}>{Amount} STRU</span> to Staking
                 </p>
               </>
             )}
-            {isError && (
-              <>
-                <div className={`${styles.iconWrapper} ${styles.rejected}`}>
-                  <IconRejected />
-                </div>
-                <p>
-                  <span>Connection Error.</span>
-                  <span>Please try again</span>
-                </p>
-              </>
-            )}
+
             {Number(struBalance) < amountVAlue && (
-              <div>
-                <div className={`${styles.iconWrapper} ${styles.rejected}`}>
-                  <IconRejected />
-                </div>
-                <p>
-                  <span>You don't have enough tokens.</span>
-                  <span>Please try again</span>
-                </p>
-              </div>
+              <Msg
+                text1="You don't have enough tokens."
+                text2="Please try again"
+                Component={IconRejected}
+              />
             )}
           </div>
 

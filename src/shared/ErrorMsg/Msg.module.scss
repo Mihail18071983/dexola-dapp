@@ -1,0 +1,53 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(32, 254, 81, 1);
+}
+
+.rejected {
+  background-color: #fe2d20;
+}
+
+.textContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.part1 {
+  color: var(--white);
+  font-family: Roboto Mono;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.71;
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}
+
+.part2 {
+  color: var(--white);
+  font-family: Roboto Mono;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.71;
+  @media screen and (min-width: 744px) {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}

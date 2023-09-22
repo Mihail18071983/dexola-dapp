@@ -17,3 +17,10 @@
     );
   }
 }
+
+.toastContainer {
+  bottom: 124px;
+  @media screen and (min-width: 744px) {
+    bottom: 80px;
+  }
+}

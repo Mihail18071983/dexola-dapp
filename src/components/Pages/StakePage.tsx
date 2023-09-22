@@ -15,7 +15,6 @@ import { formatted } from "../../shared/utils/formatUnits";
 import { currentTimeStamp } from "../../shared/utils/currentTimeStamp";
 const StakePage = () => {
   const { isConnected } = useAccount();
-  console.log(isConnected);
   const { data: periodFinish } = usePeriodFinish();
   const { data: rewardRateData } = useRewardRate();
   const { data: totalStakeData } = useTotalStake();
