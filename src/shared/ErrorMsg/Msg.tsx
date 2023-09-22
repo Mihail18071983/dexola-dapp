@@ -5,12 +5,20 @@ interface IProps {
   text1: string;
   text2: string;
   Component?: React.FC;
+  approved?: boolean;
 }
 
-export const Msg = ({ text1, text2, Component = Fragment }: IProps) => {
+export const Msg = ({
+  text1,
+  text2,
+  Component = Fragment,
+  approved,
+}: IProps) => {
   return (
     <div className={styles.wrapper}>
-      <div className={`${styles.iconWrapper} ${styles.rejected}`}>
+      <div
+        className={`${styles.iconWrapper} ${!approved ? styles.rejected : ""}`}
+      >
         <Component />
       </div>
       <p className={styles.textContent}>

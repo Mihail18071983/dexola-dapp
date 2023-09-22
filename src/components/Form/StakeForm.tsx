@@ -15,9 +15,18 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 
+import { formatted } from "../../shared/utils/formatUnits";
+import { currentTimeStamp } from "../../shared/utils/currentTimeStamp";
+
 import { Msg } from "../../shared/ErrorMsg/Msg";
 
-import { useUserBalance } from "../../hooks/contracts-api";
+import {
+  useUserBalance,
+  useRewardRate,
+  useTotalStake,
+  useStakedBalance,
+  usePeriodFinish
+} from "../../hooks/contracts-api";
 
 import {
   starRunnerStakingContractConfig,
@@ -29,13 +38,13 @@ type FormData = {
 };
 
 interface IProps {
-  rewardRate: string;
+  // rewardRate: string;
   struBalance: string | undefined;
 }
 
 const CONTRACT_STAKING_ADDRESS = import.meta.env.VITE_CONTRACT_STAKING_ADDRESS;
 
-export const Form = ({ rewardRate, struBalance }: IProps) => {
+export const Form = ({ struBalance }: IProps) => {
   const {
     register,
     handleSubmit,
@@ -57,13 +66,26 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
   const successMsg = () =>
     toast(
       <Msg
+        approved
         text1={`${Amount} STRU`}
         text2="successfully added to Staking"
         Component={IconApproved}
       />
     );
 
+  const { data: rewardRateData } = useRewardRate();
+  const { data: totalStakeData } = useTotalStake();
+  const { data: stakedBalanceData } = useStakedBalance();
+   const { data: periodFinish } = usePeriodFinish();
+
   const amountVAlue = Number(watch("amount"));
+  const totalStake = formatted(totalStakeData);
+  const stakedBalance = formatted(stakedBalanceData);
+  const rewardRate = formatted(rewardRateData);
+  const remaining = Number(periodFinish) - currentTimeStamp;
+  const available = remaining * rewardRate;
+
+  const rate = ((stakedBalance * available) / totalStake + amountVAlue).toFixed(2);
 
   const { address } = useAccount();
 
@@ -129,7 +151,7 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
             <span className={styles.stake}>Stake</span>
             <div className={styles.rest}>
               <span className={styles.rewardsName}>Reward rate:</span>
-              <span className={styles.rewardsValue}>{rewardRate}</span>
+              <span className={styles.rewardsValue}>{rate}</span>
               <span className={styles.rewardUnities}>STRU/week</span>
             </div>
           </h2>
@@ -170,7 +192,9 @@ export const Form = ({ rewardRate, struBalance }: IProps) => {
                   secondaryColor="rgba(110, 117, 139, 1)"
                 />
                 <p className={styles.pendingMSg}>
-                  Adding <span className={styles.tokenAmout}>{Amount} STRU</span> to Staking
+                  Adding{" "}
+                  <span className={styles.tokenAmout}>{Amount} STRU</span> to
+                  Staking
                 </p>
               </>
             )}
