@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import styles from "./Form.module.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
@@ -7,12 +8,16 @@ import { Button } from "../../shared/Button/Button";
 import { Oval } from "react-loader-spinner";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
+import { Msg } from "../../shared/ErrorMsg/Msg";
 import {
   usePrepareContractWrite,
   useContractWrite,
   useAccount,
   useWaitForTransaction,
 } from "wagmi";
+
+import { useStakedBalance } from "../../hooks/contracts-api";
+import { formatted } from "../../shared/utils/formatUnits";
 
 import {
   starRunnerStakingContractConfig,
@@ -23,13 +28,9 @@ type FormData = {
   amount: string;
 };
 
-interface IProps {
-  stakedBalance: string | undefined;
-}
-
 const CONTRACT_STAKING_ADDRESS = import.meta.env.VITE_CONTRACT_STAKING_ADDRESS;
 
-export const Form = ({ stakedBalance }: IProps) => {
+export const Form = () => {
   const {
     register,
     handleSubmit,
@@ -44,7 +45,20 @@ export const Form = ({ stakedBalance }: IProps) => {
     mode: "onBlur",
   });
 
+  const { data: stakedBalanceData } = useStakedBalance();
+  const stakedBalance = formatted(stakedBalanceData).toFixed(0);
+
   const [Amount, setAmount] = useState<number | null>(null);
+
+  const successMsg = () =>
+    toast(
+      <Msg
+        approved
+        text1={`${Amount} STRU`}
+        text2="successfully added to account"
+        Component={IconApproved}
+      />
+    );
 
   const amountVAlue = Number(watch("amount"));
 
@@ -53,7 +67,7 @@ export const Form = ({ stakedBalance }: IProps) => {
   const { config: tokenConfig } = usePrepareContractWrite({
     ...starRunnerTokenContractConfig,
     functionName: "approve",
-    args: [CONTRACT_STAKING_ADDRESS, BigInt(2000 * 1e18)],
+    args: [CONTRACT_STAKING_ADDRESS, stakedBalanceData || BigInt(2000 * 1e18)],
   });
 
   const { writeAsync: writeToken } = useContractWrite(tokenConfig);
@@ -67,13 +81,13 @@ export const Form = ({ stakedBalance }: IProps) => {
   const {
     data,
     write: writeWithdraw,
-    error,
-    isLoading,
-    isError,
   } = useContractWrite(stakingConfig);
 
-  const { isLoading: isPending, isSuccess } = useWaitForTransaction({
+  const { isLoading: isPending } = useWaitForTransaction({
     hash: data?.hash,
+     onSuccess() {
+      successMsg();
+    },
   });
 
   const onSubmit: SubmitHandler<FormData> = async () => {
@@ -94,7 +108,13 @@ export const Form = ({ stakedBalance }: IProps) => {
 
       reset();
     } catch (error) {
-      console.error("Error staking tokens:", error);
+      toast(
+        <Msg
+          text1="Connection Error"
+          text2="Please try again"
+          Component={IconRejected}
+        />
+      );
     }
   };
 
@@ -105,7 +125,7 @@ export const Form = ({ stakedBalance }: IProps) => {
           <h2 className={styles.heading}>
             <span className={styles.stake}>Withdraw</span>
           </h2>
-          <label className={styles.label} htmlFor="amount">     
+          <label className={styles.label} htmlFor="amount">
             <input
               id="amount"
               className={styles.input}
@@ -145,28 +165,7 @@ export const Form = ({ stakedBalance }: IProps) => {
                 <p>Withdrawing {Amount} STRU to the account</p>
               </>
             )}
-            {isSuccess && (
-              <>
-                <div className={styles.iconWrapper}>
-                  <IconApproved />
-                </div>
-                <p className={styles.successfullMessage}>
-                  <span className={styles.struQuantity}>{Amount} STRU</span>
-                  <span> successfully added to account</span>
-                </p>
-              </>
-            )}
-            {isError && (
-              <>
-                <div className={`${styles.iconWrapper} ${styles.rejected}`}>
-                  <IconRejected />
-                </div>
-                <p>
-                  <span>Connection Error.</span>
-                  <span>Please try again</span>
-                </p>
-              </>
-            )}
+           
             {Number(stakedBalance) < amountVAlue && (
               <div>
                 <div className={`${styles.iconWrapper} ${styles.rejected}`}>
@@ -180,7 +179,10 @@ export const Form = ({ stakedBalance }: IProps) => {
             )}
           </div>
 
-          <Button className={`${styles.btn} ${styles.withdrawBtn}`} type="submit">
+          <Button
+            className={`${styles.btn} ${styles.withdrawBtn}`}
+            type="submit"
+          >
             {isSubmitting ? (
               <ColorRing
                 visible={true}

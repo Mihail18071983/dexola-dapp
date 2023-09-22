@@ -3,6 +3,7 @@ import { useAccount } from "wagmi";
 import { formatted } from "../../shared/utils/formatUnits";
 import { currentTimeStamp } from "../../shared/utils/currentTimeStamp";
 import { truncateAddress } from "../../shared/utils/truncateAddress";
+import { Promt } from "../../shared/Promt/Promt";
 
 import {
   useStakedBalance,

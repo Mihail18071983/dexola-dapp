@@ -1,8 +1,10 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import styles from "./Form.module.scss";
 import { ColorRing } from "react-loader-spinner";
 import { Button } from "../../shared/Button/Button";
 import { Oval } from "react-loader-spinner";
+import { toast } from "react-toastify";
+import { Msg } from "../../shared/ErrorMsg/Msg";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import { useAccount, useWaitForTransaction } from "wagmi";
@@ -20,12 +22,23 @@ export const Form = ({ rewards }: IProps) => {
 
   const [Rewards, setRewards] = useState<number | null>(null);
 
+  const successMsg = () =>
+    toast(
+      <Msg
+        approved
+        text1={`${Rewards} STRU`}
+        text2="successfully added to the user's account"
+        Component={IconApproved}
+      />
+    );
+
   const {
     isLoading: isPending,
-    isError,
-    isSuccess,
   } = useWaitForTransaction({
     hash: data?.hash,
+    onSuccess() {
+      successMsg();
+    },
   });
 
   const onSubmit = async () => {
@@ -35,10 +48,16 @@ export const Form = ({ rewards }: IProps) => {
         return;
       }
       if (Number(rewards) === 0) return;
-     if (Number(rewards)!==0) setRewards(Number(rewards));
+      if (Number(rewards) !== 0) setRewards(Number(rewards));
       claim?.();
     } catch (error) {
-      console.error("Error staking tokens:", error);
+      toast(
+        <Msg
+          text1="Connection Error"
+          text2="Please try again"
+          Component={IconRejected}
+        />
+      );
     }
   };
 
@@ -69,28 +88,6 @@ export const Form = ({ rewards }: IProps) => {
                 secondaryColor="rgba(110, 117, 139, 1)"
               />
               <p>Adding rewards to the user's account</p>
-            </>
-          )}
-          {isSuccess  && (
-            <>
-              <div className={styles.iconWrapper}>
-                <IconApproved />
-              </div>
-              <p className={styles.successfullMessage}>
-                <span className={styles.struQuantity}>{Rewards} STRU</span>
-                <span> successfully added to the user's account</span>
-              </p>
-            </>
-          )}
-          {isError && (
-            <>
-              <div className={`${styles.iconWrapper} ${styles.rejected}`}>
-                <IconRejected />
-              </div>
-              <p>
-                <span>Connection Error.</span>
-                <span>Please try again</span>
-              </p>
             </>
           )}
         </div>

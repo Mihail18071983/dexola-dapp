@@ -38,7 +38,6 @@ type FormData = {
 };
 
 interface IProps {
-  // rewardRate: string;
   struBalance: string | undefined;
 }
 
