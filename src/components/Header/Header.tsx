@@ -24,7 +24,7 @@ import { ConnectionButton } from "../../shared/ConnectionButton/ConnectionButton
 
 export const Header: FC = () => {
   const DAY_Duration = 24 * 60 * 60;
-  const { address, isConnected} = useAccount();
+  const { address, isConnected } = useAccount();
   const { data: stakedBalanceData } = useStakedBalance();
   const { data: totalStakeUsersData } = useTotalStake();
   const { data: periodFinish } = usePeriodFinish();
@@ -49,8 +49,7 @@ export const Header: FC = () => {
   ).toFixed(0);
 
   const APR = ((totalRewardForPeriod * 100) / totalStakeUsers).toFixed(0) || 0;
-  
-  
+
   return (
     <header className={styles.header}>
       <div className={containerStyles.container}>
@@ -59,8 +58,7 @@ export const Header: FC = () => {
             <Logo className={styles.icon} width="34" height="20" />
           </button>
           {!isConnected ? (
-          <ConnectionButton/>
-          
+            <ConnectionButton />
           ) : (
             <div className={styles.clientInfoWrapper}>
               <div className={styles.balanceWrapper}>
@@ -88,9 +86,10 @@ export const Header: FC = () => {
             </div>
           )}
         </div>
-          <div className={styles.infoWrapper}>
-            <Title className={styles.title} text="StarRunner Token staking" />
-            <div className={styles.userValueInfoWrapper}>
+        <div className={styles.infoWrapper}>
+          <Title className={styles.title} text="StarRunner Token staking" />
+          <div className={styles.userValueInfoWrapper}>
+            <div className={styles.userStakedBalanceWrapper}>
               <p className={styles.userStakedBalance}>
                 <span className={styles.stakedBalanceValue}>
                   {stakedBalance}
@@ -98,21 +97,39 @@ export const Header: FC = () => {
                 <span className={styles.stakedBalanceUnit}>STRU</span>
                 <span className={styles.stakedBalanceName}>Staked balance</span>
               </p>
+              <Promt
+                className={styles.promt}
+                text="Staking rewards get allocated on this sum"
+              />
+            </div>
+            <div className={styles.aprWrapper}>
               <p className={styles.apr}>
                 <span className={styles.aprValue}>≈{APR}%</span>
                 <span className={styles.aprUnit}>APR</span>
               </p>
-              <p className={styles.days}>
-                <span className={styles.daysValue}>{Days}</span>
-                <span className={styles.daysUnit}>DAYS</span>
-              </p>
+              <Promt
+                className={styles.promt}
+                text="Displays the average for APR.
+                Interest rate is calculated for each amount of tokens."
+              />
+            </div>
+            <p className={styles.days}>
+              <span className={styles.daysValue}>{Days}</span>
+              <span className={styles.daysUnit}>DAYS</span>
+            </p>
+            <div className={styles.availableRewardsWrapper}>
               <p className={styles.avilableReawards}>
                 <span className={styles.rewardsValue}>{rewardsAvailable}</span>{" "}
                 <span className={styles.rewardsUnit}>STRU</span>
                 <span className={styles.rewardsName}>Rewards</span>
               </p>
+              <Promt
+                className={styles.promt}
+                text="Rewards get allocated every second"
+              />
             </div>
           </div>
+        </div>
       </div>
     </header>
   );

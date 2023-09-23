@@ -1,11 +1,25 @@
 .textWrapper {
-    width: fit-content;
-    padding: 8px 12px;
-    background-color:var(--white);
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(44%, -95%);
+  padding: 8px 12px;
+  background-color: var(--white);
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.content {
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.14;
 }
 
 .pointer {
-    position: absolute;
-    bottom: 0;
-
+  position: absolute;
+  bottom: 0;
+  fill: var(--white);
+  right: 50%;
+  transform: translate(50%, 100%);
 }

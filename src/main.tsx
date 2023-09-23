@@ -10,7 +10,13 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "@fontsource/kanit/400.css";
 import "@fontsource/kanit/500.css";
+import "@fontsource/kanit/600.css";
+import "@fontsource/kanit/700.css";
 import "@fontsource/roboto-mono/400.css";
+import "@fontsource/roboto-mono/500.css";
+import "@fontsource/roboto-mono/600.css";
+import "@fontsource/roboto-mono/700.css";
+import "@fontsource/inter/400.css";
 import { BrowserRouter as Router } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

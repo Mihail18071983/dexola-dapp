@@ -76,6 +76,19 @@
   gap: 20px;
   padding-top: 8px;
   padding-bottom: 8px;
+  @media screen and (min-width: 744px) {
+    gap: 24px;
+  }
+  @media screen and (min-width: 1440px) {
+    gap: 40px;
+  }
+}
+
+.userStakedBalanceWrapper,
+.aprWrapper,
+.availableRewardsWrapper {
+  cursor: pointer;
+  position: relative;
 }
 
 .icon {
@@ -93,8 +106,6 @@
   letter-spacing: -0.24px;
   @media screen and (min-width: 744px) {
     font-size: 16px;
-    font-weight: 400;
-    line-height: normal;
     letter-spacing: -0.32px;
   }
   @media screen and (min-width: 1440px) {
@@ -108,6 +119,28 @@
       height: 24px;
       background-size: contain;
     }
+  }
+}
+
+.userStakedBalance:hover + .promt,
+.apr:hover + .promt,
+.avilableReawards:hover + .promt {
+  width: fit-content;
+  transition: opacity 0.5s ease-in-out;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: visible;
+}
+
+.promt {
+  @media screen and (max-width: 1439px) {
+    display: none;
+  }
+  @media screen and (min-width: 1440px) {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    width: fit-content;
   }
 }
 

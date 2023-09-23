@@ -1,5 +1,5 @@
 import React from "react";
-import styles from ".Promt.module.scss";
+import styles from "./Promt.module.scss";
 import { ReactComponent as Pointer } from "../../assets/svg/pointer.svg";
 
 interface IProps {
@@ -10,7 +10,7 @@ interface IProps {
 export const Promt = ({ text, className}: IProps) => {
   return (
     <div className={`${styles.textWrapper} ${className}`}>
-      {text}
+      <p className={styles.content}>{text}</p>
       <Pointer className={styles.pointer} />
     </div>
   );

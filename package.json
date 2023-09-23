@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.0.8",
     "@fontsource/kanit": "^5.0.11",
     "@fontsource/roboto-mono": "^5.0.8",
     "@hookform/resolvers": "^3.3.1",
