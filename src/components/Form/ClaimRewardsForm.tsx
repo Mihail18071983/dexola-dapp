@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styles from "./Form.module.scss";
-import { ColorRing } from "react-loader-spinner";
 import { Button } from "../../shared/Button/Button";
-import { Oval } from "react-loader-spinner";
+
 import { toast } from "react-toastify";
+import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Msg } from "../../shared/ErrorMsg/Msg";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
@@ -18,7 +18,7 @@ interface IProps {
 export const Form = ({ rewards }: IProps) => {
   const { address } = useAccount();
 
-  const { claim, data } = useClaimRewards();
+  const { claim, data, isWaitingRewardsWritten } = useClaimRewards();
 
   const [Rewards, setRewards] = useState<number | null>(null);
 
@@ -32,9 +32,7 @@ export const Form = ({ rewards }: IProps) => {
       />
     );
 
-  const {
-    isLoading: isPending,
-  } = useWaitForTransaction({
+  const { isLoading: isWaitingRewards } = useWaitForTransaction({
     hash: data?.hash,
     onSuccess() {
       successMsg();
@@ -77,35 +75,16 @@ export const Form = ({ rewards }: IProps) => {
       </div>
 
       <div className={styles.additionalWrapper}>
-        <div className={styles.infomessageWrapper}>
-          {isPending && (
-            <>
-              <Oval
-                width={32}
-                height={32}
-                strokeWidth={6}
-                color="rgba(32, 254, 81, 1)"
-                secondaryColor="rgba(110, 117, 139, 1)"
-              />
-              <p>Adding rewards to the user's account</p>
-            </>
-          )}
-        </div>
-
-        <Button onClick={onSubmit} className={`${styles.btn}`} type="button">
-          {isPending ? (
-            <ColorRing
-              visible={true}
-              height="80"
-              width="80"
-              ariaLabel="blocks-loading"
-              wrapperStyle={{}}
-              wrapperClass="blocks-wrapper"
-              colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
-            />
-          ) : (
-            <span className={styles.btnContent}>Claim rewards</span>
-          )}
+        <Button
+          onClick={onSubmit}
+          disabled={Number(rewards) === 0}
+          className={styles.btn}
+          type="button"
+        >
+          <span className={styles.btnContent}>
+            {isWaitingRewards ? "Processing..." : "Claim rewards"}
+          </span>
+          {isWaitingRewards ||isWaitingRewardsWritten && <CustomLoader width={32} height={32} />}
         </Button>
       </div>
     </div>

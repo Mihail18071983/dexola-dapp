@@ -7,6 +7,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap:8px;
   background-color: var(--button-color);
   color: var(--white);
   font-size: 14px;
@@ -17,6 +18,11 @@
   transition: background-color 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
   &:hover {
     color:var(--light-grey);
+  }
+
+  &:disabled {
+    color:var(--dark-grey);
+    background-color:var(--light-grey);
   }
 
   @media screen and (min-width: 744px) {

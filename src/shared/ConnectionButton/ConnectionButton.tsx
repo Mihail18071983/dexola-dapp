@@ -2,36 +2,26 @@ import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Button } from "../Button/Button";
 import { useAccount } from "wagmi";
-import { Oval } from "react-loader-spinner";
+import { CustomLoader } from "../CustomLoader/CustomLoader";
 
 interface IProps {
-className?: string;
+  className?: string;
 }
 
-export const ConnectionButton = ({className}:IProps) => {
+export const ConnectionButton = ({ className }: IProps) => {
   const { isConnecting } = useAccount();
   return (
     <ConnectButton.Custom>
       {({ openConnectModal }) => {
         return (
-          <Button className={className}
+          <Button
+            className={className}
             disabled={isConnecting}
             onClick={openConnectModal}
             type="button"
           >
-            {isConnecting ? (
-              <Oval
-                ariaLabel="loading-indicator"
-                height={32}
-                width={32}
-                strokeWidth={2}
-                strokeWidthSecondary={1}
-                color="blue"
-                secondaryColor="white"
-              />
-            ) : (
-              <span>Connect Wallet</span>
-            )}
+            <span>{!isConnecting ? "Connect Wallet" : "Connecting..."}</span>
+            {isConnecting && <CustomLoader width={32} height={32} />}
           </Button>
         );
       }}

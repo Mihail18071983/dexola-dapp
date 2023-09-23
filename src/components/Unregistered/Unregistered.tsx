@@ -19,7 +19,6 @@ export const Unregistered = () => {
         />
       </div>
       <ConnectionButton className={styles.button } />
-   
     </div>
   );
 };

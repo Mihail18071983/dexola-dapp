@@ -3,9 +3,8 @@ import { toast } from "react-toastify";
 import styles from "./Form.module.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { ColorRing } from "react-loader-spinner";
+import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Button } from "../../shared/Button/Button";
-import { Oval } from "react-loader-spinner";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import { Msg } from "../../shared/ErrorMsg/Msg";
@@ -68,24 +67,28 @@ export const Form = () => {
     ...starRunnerTokenContractConfig,
     functionName: "approve",
     args: [CONTRACT_STAKING_ADDRESS, stakedBalanceData || BigInt(2000 * 1e18)],
+    enabled: false,
   });
 
-  const { writeAsync: writeToken } = useContractWrite(tokenConfig);
+  const { writeAsync: approveTokenAmount, isLoading: isWaitingForApprove } =
+    useContractWrite(tokenConfig);
 
-  const { config: stakingConfig } = usePrepareContractWrite({
+  const { config: withdrawConfig } = usePrepareContractWrite({
     ...starRunnerStakingContractConfig,
     functionName: "withdraw",
-    args: [BigInt(amountVAlue ? amountVAlue * 1e18 : "1000")],
+    args: [BigInt(amountVAlue * 1e18)],
+    enabled: false,
   });
 
   const {
     data,
     write: writeWithdraw,
-  } = useContractWrite(stakingConfig);
+    isLoading: isWaitingForWithdrawing,
+  } = useContractWrite(withdrawConfig);
 
-  const { isLoading: isPending } = useWaitForTransaction({
+  const { isLoading: isWaitingForTransaction } = useWaitForTransaction({
     hash: data?.hash,
-     onSuccess() {
+    onSuccess() {
       successMsg();
     },
   });
@@ -103,7 +106,7 @@ export const Form = () => {
 
       setAmount(amountVAlue);
 
-      await writeToken?.();
+      await approveTokenAmount?.();
       writeWithdraw?.();
 
       reset();
@@ -153,19 +156,13 @@ export const Form = () => {
 
         <div className={styles.additionalWrapper}>
           <div className={styles.infomessageWrapper}>
-            {isPending && (
+            {isWaitingForTransaction && (
               <>
-                <Oval
-                  width={32}
-                  height={32}
-                  strokeWidth={6}
-                  color="rgba(32, 254, 81, 1)"
-                  secondaryColor="rgba(110, 117, 139, 1)"
-                />
+                <CustomLoader width={32} height={32} />
                 <p>Withdrawing {Amount} STRU to the account</p>
               </>
             )}
-           
+
             {Number(stakedBalance) < amountVAlue && (
               <div>
                 <div className={`${styles.iconWrapper} ${styles.rejected}`}>
@@ -180,22 +177,24 @@ export const Form = () => {
           </div>
 
           <Button
-            className={`${styles.btn} ${styles.withdrawBtn}`}
+            disabled={!writeWithdraw || isWaitingForTransaction}
+            className={styles.btn}
             type="submit"
           >
-            {isSubmitting ? (
-              <ColorRing
-                visible={true}
-                height="80"
-                width="80"
-                ariaLabel="blocks-loading"
-                wrapperStyle={{}}
-                wrapperClass="blocks-wrapper"
-                colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
-              />
-            ) : (
-              <span className={styles.btnContent}>Withdraw</span>
-            )}
+            <span className={styles.btnContent}>
+              {isSubmitting ||
+              isWaitingForTransaction ||
+              isWaitingForApprove ||
+              isWaitingForWithdrawing
+                ? "Withdrawing..."
+                : "Withdraw"}
+            </span>
+            {isSubmitting ||
+              isWaitingForTransaction ||
+              isWaitingForApprove ||
+              (isWaitingForWithdrawing && (
+                <CustomLoader width={32} height={32} />
+              ))}
           </Button>
         </div>
       </form>

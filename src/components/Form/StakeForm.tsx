@@ -3,9 +3,8 @@ import styles from "./Form.module.scss";
 import { toast } from "react-toastify";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
-import { ColorRing } from "react-loader-spinner";
+import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Button } from "../../shared/Button/Button";
-import { Oval } from "react-loader-spinner";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import {
@@ -25,7 +24,7 @@ import {
   useRewardRate,
   useTotalStake,
   useStakedBalance,
-  usePeriodFinish
+  usePeriodFinish,
 } from "../../hooks/contracts-api";
 
 import {
@@ -75,7 +74,7 @@ export const Form = ({ struBalance }: IProps) => {
   const { data: rewardRateData } = useRewardRate();
   const { data: totalStakeData } = useTotalStake();
   const { data: stakedBalanceData } = useStakedBalance();
-   const { data: periodFinish } = usePeriodFinish();
+  const { data: periodFinish } = usePeriodFinish();
 
   const amountVAlue = Number(watch("amount"));
   const totalStake = formatted(totalStakeData);
@@ -84,7 +83,9 @@ export const Form = ({ struBalance }: IProps) => {
   const remaining = Number(periodFinish) - currentTimeStamp;
   const available = remaining * rewardRate;
 
-  const rate = ((stakedBalance * available) / totalStake + amountVAlue).toFixed(2);
+  const rate = ((stakedBalance * available) / totalStake + amountVAlue).toFixed(
+    2
+  );
 
   const { address } = useAccount();
 
@@ -97,17 +98,23 @@ export const Form = ({ struBalance }: IProps) => {
     ],
   });
 
-  const { writeAsync: writeToken } = useContractWrite(tokenConfig);
+  const { writeAsync: approveTokenAmount, isLoading: isWatingForApprove } =
+    useContractWrite(tokenConfig);
 
   const { config: stakingConfig } = usePrepareContractWrite({
     ...starRunnerStakingContractConfig,
     functionName: "stake",
-    args: [BigInt(amountVAlue ? amountVAlue * 1e18 : "1000")],
+    args: [BigInt(amountVAlue * 1e18)],
+    enabled: false,
   });
 
-  const { data, write: writeStaking } = useContractWrite(stakingConfig);
+  const {
+    data,
+    write: writeStaking,
+    isLoading: isWaitingForStaking,
+  } = useContractWrite(stakingConfig);
 
-  const { isLoading: isPending } = useWaitForTransaction({
+  const { isLoading: isWaitingForTRansaction } = useWaitForTransaction({
     hash: data?.hash,
     onSuccess() {
       successMsg();
@@ -127,7 +134,7 @@ export const Form = ({ struBalance }: IProps) => {
 
       setAmount(amountVAlue);
 
-      await writeToken?.();
+      await approveTokenAmount?.();
       writeStaking?.();
 
       reset();
@@ -181,15 +188,9 @@ export const Form = ({ struBalance }: IProps) => {
         </div>
         <div className={styles.additionalWrapper}>
           <div className={styles.infomessageWrapper}>
-            {isPending && (
+            {isWaitingForTRansaction && (
               <>
-                <Oval
-                  width={32}
-                  height={32}
-                  strokeWidth={6}
-                  color="rgba(32, 254, 81, 1)"
-                  secondaryColor="rgba(110, 117, 139, 1)"
-                />
+                <CustomLoader width={32} height={32} />
                 <p className={styles.pendingMSg}>
                   Adding{" "}
                   <span className={styles.tokenAmout}>{Amount} STRU</span> to
@@ -207,20 +208,23 @@ export const Form = ({ struBalance }: IProps) => {
             )}
           </div>
 
-          <Button className={styles.btn} type="submit">
-            {isSubmitting ? (
-              <ColorRing
-                visible={true}
-                height="80"
-                width="80"
-                ariaLabel="blocks-loading"
-                wrapperStyle={{}}
-                wrapperClass="blocks-wrapper"
-                colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
-              />
-            ) : (
-              <span className={styles.btnContent}>Stake</span>
-            )}
+          <Button
+            disabled={!writeStaking || isWaitingForTRansaction}
+            className={styles.btn}
+            type="submit"
+          >
+            <span className={styles.btnContent}>
+              {isSubmitting ||
+              isWaitingForTRansaction ||
+              isWatingForApprove ||
+              isWaitingForStaking
+                ? "Staking..."
+                : "Stake"}
+            </span>
+            {isSubmitting ||
+              isWaitingForTRansaction ||
+              isWatingForApprove ||
+              (isWaitingForStaking && <CustomLoader width={32} height={32} />)}
           </Button>
         </div>
       </form>

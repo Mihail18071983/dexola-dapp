@@ -88,8 +88,9 @@ export const useClaimRewards = () => {
   const {config}=usePrepareContractWrite({
     ...starRunnerStakingContractConfig, 
     functionName: "claimReward",
+    enabled:false,
   });
-  const { write: claim, data } = useContractWrite(config);
-  return { claim, data }
+  const { write: claim, data, isLoading:isWaitingRewardsWritten } = useContractWrite(config);
+  return { claim, data, isWaitingRewardsWritten }
 };
 
