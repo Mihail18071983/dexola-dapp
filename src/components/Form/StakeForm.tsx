@@ -94,27 +94,27 @@ export const Form = ({ struBalance }: IProps) => {
     functionName: "approve",
     args: [
       CONTRACT_STAKING_ADDRESS,
-      userTokenBalanceData || BigInt(20000 * 1e18),
+      userTokenBalanceData ?? BigInt(20000 * 1e18),
     ],
   });
 
-  const { writeAsync: approveTokenAmount, isLoading: isWatingForApprove } =
-    useContractWrite(tokenConfig);
+  const {
+    writeAsync: approveTokenAmount,
+    isLoading: isWatingForApprove,
+  } = useContractWrite(tokenConfig);
 
-  const { config: stakingConfig } = usePrepareContractWrite({
-    ...starRunnerStakingContractConfig,
-    functionName: "stake",
-    args: [BigInt(amountVAlue * 1e18)],
-    enabled: false,
-  });
 
   const {
     data,
     write: writeStaking,
     isLoading: isWaitingForStaking,
-  } = useContractWrite(stakingConfig);
+  } = useContractWrite({
+    ...starRunnerStakingContractConfig,
+     functionName: "stake",
+      args: [BigInt(amountVAlue * 1e18)?? 69420],
+  });
 
-  const { isLoading: isWaitingForTRansaction } = useWaitForTransaction({
+  const { isLoading: isWaitingForTransaction } = useWaitForTransaction({
     hash: data?.hash,
     onSuccess() {
       successMsg();
@@ -188,7 +188,7 @@ export const Form = ({ struBalance }: IProps) => {
         </div>
         <div className={styles.additionalWrapper}>
           <div className={styles.infomessageWrapper}>
-            {isWaitingForTRansaction && (
+            {isWaitingForTransaction && (
               <>
                 <CustomLoader width={32} height={32} />
                 <p className={styles.pendingMSg}>
@@ -209,20 +209,20 @@ export const Form = ({ struBalance }: IProps) => {
           </div>
 
           <Button
-            disabled={!writeStaking || isWaitingForTRansaction}
+            disabled={!amountVAlue || isWaitingForTransaction}
             className={styles.btn}
             type="submit"
           >
             <span className={styles.btnContent}>
               {isSubmitting ||
-              isWaitingForTRansaction ||
+              isWaitingForTransaction ||
               isWatingForApprove ||
               isWaitingForStaking
                 ? "Staking..."
                 : "Stake"}
             </span>
             {isSubmitting ||
-              isWaitingForTRansaction ||
+              isWaitingForTransaction ||
               isWatingForApprove ||
               (isWaitingForStaking && <CustomLoader width={32} height={32} />)}
           </Button>

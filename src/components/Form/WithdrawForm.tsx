@@ -67,24 +67,21 @@ export const Form = () => {
     ...starRunnerTokenContractConfig,
     functionName: "approve",
     args: [CONTRACT_STAKING_ADDRESS, stakedBalanceData || BigInt(2000 * 1e18)],
-    enabled: false,
   });
 
   const { writeAsync: approveTokenAmount, isLoading: isWaitingForApprove } =
     useContractWrite(tokenConfig);
 
-  const { config: withdrawConfig } = usePrepareContractWrite({
-    ...starRunnerStakingContractConfig,
-    functionName: "withdraw",
-    args: [BigInt(amountVAlue * 1e18)],
-    enabled: false,
-  });
 
   const {
     data,
     write: writeWithdraw,
     isLoading: isWaitingForWithdrawing,
-  } = useContractWrite(withdrawConfig);
+  } = useContractWrite({
+    ...starRunnerStakingContractConfig,
+    functionName: "withdraw",
+    args: [BigInt(amountVAlue * 1e18)],
+  });
 
   const { isLoading: isWaitingForTransaction } = useWaitForTransaction({
     hash: data?.hash,
@@ -177,7 +174,7 @@ export const Form = () => {
           </div>
 
           <Button
-            disabled={!writeWithdraw || isWaitingForTransaction}
+            disabled={!amountVAlue || isWaitingForTransaction}
             className={styles.btn}
             type="submit"
           >

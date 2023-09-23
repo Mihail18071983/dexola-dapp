@@ -75,6 +75,14 @@ export const Form = ({ rewards }: IProps) => {
       </div>
 
       <div className={styles.additionalWrapper}>
+        <div className={styles.infomessageWrapper}>
+          {isWaitingRewards && (
+            <>
+              <CustomLoader width={32} height={32} />
+              <p>Adding {Rewards} STRU to the account</p>
+            </>
+          )}
+        </div>
         <Button
           onClick={onSubmit}
           disabled={Number(rewards) === 0}
@@ -84,7 +92,10 @@ export const Form = ({ rewards }: IProps) => {
           <span className={styles.btnContent}>
             {isWaitingRewards ? "Processing..." : "Claim rewards"}
           </span>
-          {isWaitingRewards ||isWaitingRewardsWritten && <CustomLoader width={32} height={32} />}
+          {isWaitingRewards ||
+            (isWaitingRewardsWritten && (
+              <CustomLoader width={32} height={32} />
+            ))}
         </Button>
       </div>
     </div>
