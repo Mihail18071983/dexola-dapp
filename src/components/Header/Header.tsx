@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import { useAccount } from "wagmi";
 import { formatted } from "../../shared/utils/formatUnits";
 import { currentTimeStamp } from "../../shared/utils/currentTimeStamp";
@@ -22,7 +22,12 @@ import earthImage from "../../assets/images/earth.jpg";
 import { ReactComponent as CryptoCurrency } from "../../assets/svg/cryptocurrency.svg";
 import { ConnectionButton } from "../../shared/ConnectionButton/ConnectionButton";
 
-export const Header: FC = () => {
+interface IProps {
+  onOpenModal: (content: string) => void;
+  onCloseModal: () => void;
+}
+
+export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
   const DAY_Duration = 24 * 60 * 60;
   const { address, isConnected } = useAccount();
   const { data: stakedBalanceData } = useStakedBalance();
@@ -89,7 +94,12 @@ export const Header: FC = () => {
         <div className={styles.infoWrapper}>
           <Title className={styles.title} text="StarRunner Token staking" />
           <div className={styles.userValueInfoWrapper}>
-            <div className={styles.userStakedBalanceWrapper}>
+            <div
+              onTouchStart={() => {
+                onOpenModal("content1")}}
+              onTouchEnd={() => onCloseModal()}
+              className={styles.userStakedBalanceWrapper}
+            >
               <p className={styles.userStakedBalance}>
                 <span className={styles.stakedBalanceValue}>
                   {stakedBalance}
@@ -102,7 +112,9 @@ export const Header: FC = () => {
                 text="Staking rewards get allocated on this sum"
               />
             </div>
-            <div className={styles.aprWrapper}>
+            <div  onTouchStart={() => {
+                onOpenModal("content2")}}
+              onTouchEnd={() => onCloseModal()} className={styles.aprWrapper}>
               <p className={styles.apr}>
                 <span className={styles.aprValue}>≈{APR}%</span>
                 <span className={styles.aprUnit}>APR</span>
@@ -117,7 +129,9 @@ export const Header: FC = () => {
               <span className={styles.daysValue}>{Days}</span>
               <span className={styles.daysUnit}>DAYS</span>
             </p>
-            <div className={styles.availableRewardsWrapper}>
+            <div  onTouchStart={() => {
+                onOpenModal("content3")}}
+              onTouchEnd={() => onCloseModal()} className={styles.availableRewardsWrapper}>
               <p className={styles.avilableReawards}>
                 <span className={styles.rewardsValue}>{rewardsAvailable}</span>{" "}
                 <span className={styles.rewardsUnit}>STRU</span>

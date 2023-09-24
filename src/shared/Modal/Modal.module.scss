@@ -1,0 +1,26 @@
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  background-color: var(--modal-backdrop);
+  z-index: 1200;
+}
+
+.Modal {
+  position: relative;
+  min-width: 375px;
+  max-width: calc(100% - 10px);
+  max-height: calc(100% - 10px);
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  overflow: hidden;
+  background-color: var(--white);
+  padding: 24px 16px;
+}
