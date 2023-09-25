@@ -24,10 +24,9 @@ import { ConnectionButton } from "../../shared/ConnectionButton/ConnectionButton
 
 interface IProps {
   onOpenModal: (content: string) => void;
-  onCloseModal: () => void;
 }
 
-export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
+export const Header = ({ onOpenModal }: IProps) => {
   const DAY_Duration = 24 * 60 * 60;
   const { address, isConnected } = useAccount();
   const { data: stakedBalanceData } = useStakedBalance();
@@ -95,13 +94,9 @@ export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
           <Title className={styles.title} text="StarRunner Token staking" />
           <div className={styles.userValueInfoWrapper}>
             <div
-              onPointerDown={() => {
+              onTouchStart={() => {
                 onOpenModal("content1");
               }}
-              onPointerUp={() => {
-                onCloseModal();
-              }}
-              onPointerCancel={() => onCloseModal()}
               className={styles.userStakedBalanceWrapper}
             >
               <p className={styles.userStakedBalance}>
@@ -117,13 +112,9 @@ export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
               />
             </div>
             <div
-              onPointerDown={() => {
+              onTouchStart={() => {
                 onOpenModal("content2");
               }}
-              onPointerUp={() => {
-                onCloseModal();
-              }}
-              onPointerCancel={() => onCloseModal()}
               className={styles.aprWrapper}
             >
               <p className={styles.apr}>
@@ -141,13 +132,9 @@ export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
               <span className={styles.daysUnit}>DAYS</span>
             </p>
             <div
-               onPointerDown={() => {
+               onTouchStart={() => {
                 onOpenModal("content3");
               }}
-              onPointerUp={() => {
-                onCloseModal();
-              }}
-              onPointerCancel={() => onCloseModal()}
               className={styles.availableRewardsWrapper}
             >
               <p className={styles.avilableReawards}>

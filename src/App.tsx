@@ -33,13 +33,13 @@ function App() {
 
   return (
     <>
-      <Header onOpenModal={openModal} onCloseModal={closeModal} />
+      <Header onOpenModal={openModal}  />
       <div className={styles.wrapper}>
         <Main />
         <Footer />
       </div>
       {showModal && width < 1440 && (
-        <Modal>
+        <Modal close={closeModal}>
           {modalContent === "content1" && (
             <div className={styles.contentWrapper}>
               <h3 className={styles.title}>{ModalContent[0].name}</h3>
