@@ -12,6 +12,8 @@ interface IProps {
 export const Modal = ({ children, close }: IProps) => {
   const closeModal = useCallback(
     (ev: TouchEvent<HTMLDivElement>) => {
+      console.log("target", ev.target);
+      console.log("current target", ev.currentTarget);
       if (ev.target === ev.currentTarget) {
         close();
       }
@@ -20,16 +22,19 @@ export const Modal = ({ children, close }: IProps) => {
   );
 
   useEffect(() => {
-    window.addEventListener("click", closeModal as unknown as EventListener);
+    window.addEventListener(
+      "touchstart",
+      closeModal as unknown as EventListener
+    );
     return () =>
       window.removeEventListener(
-        "click",
+        "touchstart",
         closeModal as unknown as EventListener
       );
   }, [closeModal]);
 
   return createPortal(
-    <div className={styles.Overlay} onTouchStart={closeModal}>
+    <div onTouchStart={closeModal} className={styles.Overlay}>
       <div className={styles.Modal}>{children}</div>
     </div>,
     modalRoot!
