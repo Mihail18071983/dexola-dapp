@@ -12,16 +12,20 @@ export const ConnectionButton = ({ className }: IProps) => {
   const { isConnecting } = useAccount();
   return (
     <ConnectButton.Custom>
-      {({ openConnectModal }) => {
+      {({ openConnectModal, connectModalOpen }) => {
         return (
           <Button
             className={className}
-            disabled={isConnecting}
+            disabled={isConnecting && connectModalOpen}
             onClick={openConnectModal}
             type="button"
           >
-            <span>{!isConnecting ? "Connect Wallet" : "Connecting..."}</span>
-            {isConnecting && <CustomLoader width={32} height={32} />}
+            <span>
+              {!isConnecting || !connectModalOpen
+                ? "Connect Wallet"
+                : "Connecting..."}
+            </span>
+            {connectModalOpen && <CustomLoader width={32} height={32} />}
           </Button>
         );
       }}

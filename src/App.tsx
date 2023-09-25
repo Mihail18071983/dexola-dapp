@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import { Header } from "./components/Header/Header";
 import { Main } from "./components/Main/Main";
 import { Footer } from "./components/Footer/Footer";
@@ -14,7 +13,7 @@ function App() {
   const [width] = useWindowSize();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>("");
-
+  
   const openModal = (content: string) => {
     setShowModal(true);
     setModalContent(content);
@@ -25,7 +24,6 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(position);
     if (width > 743) {
       setPosition(toast.POSITION.BOTTOM_RIGHT);
     } else {
