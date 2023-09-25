@@ -117,10 +117,13 @@ export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
               />
             </div>
             <div
-              onTouchStart={() => {
+              onPointerDown={() => {
                 onOpenModal("content2");
               }}
-              onTouchEnd={() => onCloseModal()}
+              onPointerUp={() => {
+                onCloseModal();
+              }}
+              onPointerCancel={() => onCloseModal()}
               className={styles.aprWrapper}
             >
               <p className={styles.apr}>
@@ -138,10 +141,13 @@ export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
               <span className={styles.daysUnit}>DAYS</span>
             </p>
             <div
-              onTouchStart={() => {
+               onPointerDown={() => {
                 onOpenModal("content3");
               }}
-              onTouchEnd={() => onCloseModal()}
+              onPointerUp={() => {
+                onCloseModal();
+              }}
+              onPointerCancel={() => onCloseModal()}
               className={styles.availableRewardsWrapper}
             >
               <p className={styles.avilableReawards}>
