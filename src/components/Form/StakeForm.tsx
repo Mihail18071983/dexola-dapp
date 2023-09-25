@@ -54,7 +54,7 @@ export const Form = ({ struBalance }: IProps) => {
     defaultValues: {
       amount: "",
     },
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const { data: userTokenBalanceData } = useUserBalance();

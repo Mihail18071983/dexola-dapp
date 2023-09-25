@@ -41,7 +41,7 @@ export const Form = () => {
     defaultValues: {
       amount: "",
     },
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const { data: stakedBalanceData } = useStakedBalance();

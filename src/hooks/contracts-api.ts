@@ -33,11 +33,11 @@ export const useTotalStake = () => {
 };
 
 export const useStakedBalance = () => {
-  const { address } = useAccount();
+  const { address:userWalletAddress } = useAccount();
   const { data, isSuccess } = useContractRead({
     ...starRunnerStakingContractConfig,
     functionName: "balanceOf",
-    args: [address!],
+    args: [userWalletAddress!],
     watch: true,
   });
 
@@ -45,11 +45,11 @@ export const useStakedBalance = () => {
 };
 
 export const useReward = () => {
-  const { address } = useAccount();
+  const { address:userWalletAddress } = useAccount();
   const { data, isSuccess } = useContractRead({
     ...starRunnerStakingContractConfig,
     functionName: "earned",
-    args: [address!],
+    args: [userWalletAddress!],
     watch: true,
   });
   return { data, isSuccess };
@@ -65,11 +65,11 @@ export const useRewardForPeriod = () => {
 };
 
 export const useUserBalance = () => {
-  const { address } = useAccount();
+  const { address:userWalletAddress } = useAccount();
   const { data, refetch, isSuccess } = useContractRead({
     ...starRunnerTokenContractConfig,
     functionName: "balanceOf",
-    args: [address!],
+    args: [userWalletAddress!],
     watch: true,
   });
   return { data, refetch, isSuccess };
