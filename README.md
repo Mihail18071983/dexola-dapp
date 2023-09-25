@@ -40,3 +40,17 @@ Also values in header equipped by promt. You can display promt for every value w
 Depends on device width it will be hoisted promts (on desktop) or modal widows (tablets and mobile).
 To close modal window this promt you need to touch by backdrop window (not by message)
 ### <img width="200" src="/public/promt.png" alt="window with promt">
+
+
+## Technologies
+
+The web application was designed using the following technologies:
+
+1. As a core is used vite rect typescript boilerplate.
+2. For styling - sass modules.
+3. For operation with smart contract -wagmi
+4. For connecting wallet -rainbowkit
+5. For rendering complicated content on different type of devices is used pattern which named render by condition.
+6. For form building -react-hook-form.
+
+
