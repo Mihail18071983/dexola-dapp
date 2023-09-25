@@ -95,9 +95,13 @@ export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
           <Title className={styles.title} text="StarRunner Token staking" />
           <div className={styles.userValueInfoWrapper}>
             <div
-              onTouchStart={() => {
-                onOpenModal("content1")}}
-              onTouchEnd={() => onCloseModal()}
+              onPointerDown={() => {
+                onOpenModal("content1");
+              }}
+              onPointerUp={() => {
+                onCloseModal();
+              }}
+              onPointerCancel={() => onCloseModal()}
               className={styles.userStakedBalanceWrapper}
             >
               <p className={styles.userStakedBalance}>
@@ -112,9 +116,13 @@ export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
                 text="Staking rewards get allocated on this sum"
               />
             </div>
-            <div  onTouchStart={() => {
-                onOpenModal("content2")}}
-              onTouchEnd={() => onCloseModal()} className={styles.aprWrapper}>
+            <div
+              onTouchStart={() => {
+                onOpenModal("content2");
+              }}
+              onTouchEnd={() => onCloseModal()}
+              className={styles.aprWrapper}
+            >
               <p className={styles.apr}>
                 <span className={styles.aprValue}>≈{APR}%</span>
                 <span className={styles.aprUnit}>APR</span>
@@ -129,9 +137,13 @@ export const Header = ({ onCloseModal, onOpenModal }: IProps) => {
               <span className={styles.daysValue}>{Days}</span>
               <span className={styles.daysUnit}>DAYS</span>
             </p>
-            <div  onTouchStart={() => {
-                onOpenModal("content3")}}
-              onTouchEnd={() => onCloseModal()} className={styles.availableRewardsWrapper}>
+            <div
+              onTouchStart={() => {
+                onOpenModal("content3");
+              }}
+              onTouchEnd={() => onCloseModal()}
+              className={styles.availableRewardsWrapper}
+            >
               <p className={styles.avilableReawards}>
                 <span className={styles.rewardsValue}>{rewardsAvailable}</span>{" "}
                 <span className={styles.rewardsUnit}>STRU</span>
