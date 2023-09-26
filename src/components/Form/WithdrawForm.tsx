@@ -8,7 +8,7 @@ import { Button } from "../../shared/Button/Button";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import { Msg } from "../../shared/Notification/Msg";
-import { ErrorMsg } from "../../shared/Notification/errorMsg";
+import { ErrorMsg } from "./ClaimRewardsForm";
 
 import {
   usePrepareContractWrite,

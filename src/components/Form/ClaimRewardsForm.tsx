@@ -5,8 +5,8 @@ import { Button } from "../../shared/Button/Button";
 import { toast } from "react-toastify";
 import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Msg } from "../../shared/Notification/Msg";
-import { ErrorMsg } from "../../shared/Notification/errorMsg";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
+import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import { useAccount, useWaitForTransaction } from "wagmi";
 
 import { useClaimRewards } from "../../hooks/contracts-api";
@@ -14,6 +14,15 @@ import { useClaimRewards } from "../../hooks/contracts-api";
 interface IProps {
   rewards: string | undefined;
 }
+
+export const ErrorMsg = () =>
+    toast(
+      <Msg
+        text1="Connection Error"
+        text2="Please try again"
+        Component={IconRejected}
+      />
+    );
 
 export const Form = ({ rewards }: IProps) => {
   const { address } = useAccount();

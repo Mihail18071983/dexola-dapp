@@ -3,7 +3,7 @@ import {
   starRunnerStakingContractConfig,
 } from "../shared/utils/contracts";
 
-import { ErrorMsg } from "../shared/Notification/errorMsg";
+import { ErrorMsg } from "../unused/ErrorMsg";
 
 import {
   useAccount,
