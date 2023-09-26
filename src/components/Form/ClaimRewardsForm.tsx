@@ -4,9 +4,9 @@ import { Button } from "../../shared/Button/Button";
 
 import { toast } from "react-toastify";
 import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
-import { Msg } from "../../shared/ErrorMsg/Msg";
+import { Msg } from "../../shared/Notification/Msg";
+import { ErrorMsg } from "../../shared/Notification/errorMsg";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
-import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import { useAccount, useWaitForTransaction } from "wagmi";
 
 import { useClaimRewards } from "../../hooks/contracts-api";
@@ -49,13 +49,7 @@ export const Form = ({ rewards }: IProps) => {
       if (Number(rewards) !== 0) setRewards(Number(rewards));
       claim?.();
     } catch (error) {
-      toast(
-        <Msg
-          text1="Connection Error"
-          text2="Please try again"
-          Component={IconRejected}
-        />
-      );
+      ErrorMsg();
     }
   };
 

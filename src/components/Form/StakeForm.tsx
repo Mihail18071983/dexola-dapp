@@ -7,6 +7,7 @@ import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Button } from "../../shared/Button/Button";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
+import { ErrorMsg } from "../../shared/Notification/errorMsg";
 import {
   usePrepareContractWrite,
   useContractWrite,
@@ -17,7 +18,7 @@ import {
 import { formatted } from "../../shared/utils/formatUnits";
 import { currentTimeStamp } from "../../shared/utils/currentTimeStamp";
 
-import { Msg } from "../../shared/ErrorMsg/Msg";
+import { Msg } from "../../shared/Notification/Msg";
 
 import {
   useUserBalance,
@@ -98,11 +99,8 @@ export const Form = ({ struBalance }: IProps) => {
     ],
   });
 
-  const {
-    writeAsync: approveTokenAmount,
-    isLoading: isWatingForApprove,
-  } = useContractWrite(tokenConfig);
-
+  const { writeAsync: approveTokenAmount, isLoading: isWatingForApprove } =
+    useContractWrite(tokenConfig);
 
   const {
     data,
@@ -110,14 +108,20 @@ export const Form = ({ struBalance }: IProps) => {
     isLoading: isWaitingForStaking,
   } = useContractWrite({
     ...starRunnerStakingContractConfig,
-     functionName: "stake",
-      args: [BigInt(amountVAlue * 1e18)?? 69420],
+    functionName: "stake",
+    args: [BigInt(amountVAlue * 1e18) ?? 69420],
+    onError() {
+      ErrorMsg();
+    },
   });
 
   const { isLoading: isWaitingForTransaction } = useWaitForTransaction({
     hash: data?.hash,
     onSuccess() {
       successMsg();
+    },
+    onError() {
+      ErrorMsg();
     },
   });
 
@@ -139,13 +143,7 @@ export const Form = ({ struBalance }: IProps) => {
 
       reset();
     } catch (error) {
-      toast(
-        <Msg
-          text1="Connection Error"
-          text2="Please try again"
-          Component={IconRejected}
-        />
-      );
+      ErrorMsg();
     }
   };
 
@@ -172,6 +170,7 @@ export const Form = ({ struBalance }: IProps) => {
               })}
               type="number"
               placeholder="Enter stake amount"
+              step={0.01}
             />
             {errors.amount && (
               <p className={styles.errMessage}>{errors.amount.message}</p>

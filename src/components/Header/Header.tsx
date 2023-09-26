@@ -38,7 +38,7 @@ export const Header = ({ onOpenModal }: IProps) => {
   const { data: userEtherBalance } = useUserEther();
 
   const tokenBalanceValue = formatted(userTokenBalanceData);
-  const stakedBalance = formatted(stakedBalanceData).toFixed(0);
+  const stakedBalance = formatted(stakedBalanceData).toFixed(2);
   const totalRewardForPeriod = formatted(numberRewordsForPeriodData);
   const totalStakeUsers = formatted(
     totalStakeUsersData ? totalStakeUsersData : 0

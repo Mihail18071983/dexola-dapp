@@ -3,7 +3,15 @@ import {
   starRunnerStakingContractConfig,
 } from "../shared/utils/contracts";
 
-import { useAccount, useBalance, useContractRead, usePrepareContractWrite, useContractWrite } from "wagmi";
+import { ErrorMsg } from "../shared/Notification/errorMsg";
+
+import {
+  useAccount,
+  useBalance,
+  useContractRead,
+  usePrepareContractWrite,
+  useContractWrite,
+} from "wagmi";
 
 export const usePeriodFinish = () => {
   const { data, isSuccess } = useContractRead({
@@ -33,7 +41,7 @@ export const useTotalStake = () => {
 };
 
 export const useStakedBalance = () => {
-  const { address:userWalletAddress } = useAccount();
+  const { address: userWalletAddress } = useAccount();
   const { data, isSuccess } = useContractRead({
     ...starRunnerStakingContractConfig,
     functionName: "balanceOf",
@@ -45,7 +53,7 @@ export const useStakedBalance = () => {
 };
 
 export const useReward = () => {
-  const { address:userWalletAddress } = useAccount();
+  const { address: userWalletAddress } = useAccount();
   const { data, isSuccess } = useContractRead({
     ...starRunnerStakingContractConfig,
     functionName: "earned",
@@ -65,7 +73,7 @@ export const useRewardForPeriod = () => {
 };
 
 export const useUserBalance = () => {
-  const { address:userWalletAddress } = useAccount();
+  const { address: userWalletAddress } = useAccount();
   const { data, refetch, isSuccess } = useContractRead({
     ...starRunnerTokenContractConfig,
     functionName: "balanceOf",
@@ -84,13 +92,20 @@ export const useUserEther = () => {
   return { data, isSuccess };
 };
 
-
 export const useClaimRewards = () => {
-  const {config}=usePrepareContractWrite({
-    ...starRunnerStakingContractConfig, 
+  const { config } = usePrepareContractWrite({
+    ...starRunnerStakingContractConfig,
     functionName: "claimReward",
   });
-  const { write: claim, data, isLoading:isWaitingRewardsWritten } = useContractWrite(config);
-  return { claim, data, isWaitingRewardsWritten }
+  const {
+    write: claim,
+    data,
+    isLoading: isWaitingRewardsWritten,
+  } = useContractWrite({
+    ...config,
+    onError: () => {
+      ErrorMsg();
+    },
+  });
+  return { claim, data, isWaitingRewardsWritten };
 };
-

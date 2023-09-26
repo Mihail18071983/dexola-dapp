@@ -7,7 +7,9 @@ import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Button } from "../../shared/Button/Button";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
-import { Msg } from "../../shared/ErrorMsg/Msg";
+import { Msg } from "../../shared/Notification/Msg";
+import { ErrorMsg } from "../../shared/Notification/errorMsg";
+
 import {
   usePrepareContractWrite,
   useContractWrite,
@@ -72,7 +74,6 @@ export const Form = () => {
   const { writeAsync: approveTokenAmount, isLoading: isWaitingForApprove } =
     useContractWrite(tokenConfig);
 
-
   const {
     data,
     write: writeWithdraw,
@@ -81,12 +82,18 @@ export const Form = () => {
     ...starRunnerStakingContractConfig,
     functionName: "withdraw",
     args: [BigInt(amountVAlue * 1e18)],
+    onError() {
+      ErrorMsg();
+    },
   });
 
   const { isLoading: isWaitingForTransaction } = useWaitForTransaction({
     hash: data?.hash,
     onSuccess() {
       successMsg();
+    },
+    onError() {
+      ErrorMsg();
     },
   });
 
@@ -108,13 +115,7 @@ export const Form = () => {
 
       reset();
     } catch (error) {
-      toast(
-        <Msg
-          text1="Connection Error"
-          text2="Please try again"
-          Component={IconRejected}
-        />
-      );
+      ErrorMsg();
     }
   };
 
@@ -135,6 +136,7 @@ export const Form = () => {
                   Number(value) > 0 || "Must be a positive number",
               })}
               type="number"
+              step={0.01}
               placeholder="Enter withdraw amount"
             />
             {errors.amount && (

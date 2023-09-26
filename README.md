@@ -1,6 +1,7 @@
 # dexola-dapp
 
-This is a application which allows users to interact with smart contracts.
+This is a application which allows users to interact with smart contract.
+The application has responsive design and could be displayed appropriately from window device width 375px to 1920px.
 
 ## Getting started
 
@@ -35,9 +36,9 @@ Amount of available tokens is displayed below the input of entering amout.
 
 - claim rewards: you can withdraw rewards (amount of token) from contract to your wallet. 
 
-
 Also values in header equipped by promt. You can display promt for every value when question mark is shown. 
 Depends on device width it will be hoisted promts (on desktop) or modal widows (tablets and mobile).
+
 To close modal window this promt you need to touch by backdrop window (not by message)
 ### <img width="200" src="/public/promt.png" alt="window with promt">
 
