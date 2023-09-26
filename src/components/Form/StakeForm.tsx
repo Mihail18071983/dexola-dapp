@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Form.module.scss";
 import { toast } from "react-toastify";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -61,6 +61,7 @@ export const Form = ({ struBalance }: IProps) => {
   const { data: userTokenBalanceData } = useUserBalance();
 
   const [Amount, setAmount] = useState<number | null>(null);
+  const [_rate, setRate] = useState<string | null>(null);
 
   const successMsg = () =>
     toast(
@@ -84,9 +85,17 @@ export const Form = ({ struBalance }: IProps) => {
   const remaining = Number(periodFinish) - currentTimeStamp;
   const available = remaining * rewardRate;
 
-  const rate = ((stakedBalance * available) / totalStake + amountVAlue).toFixed(
+  
+
+  useEffect(() => { 
+    console.log("render");
+    const rate = ((stakedBalance * available) / totalStake + amountVAlue).toFixed(
     2
   );
+    setRate(rate);
+    console.log('reawrd rate', rate)
+  }, [amountVAlue, available, stakedBalance, totalStake])
+
 
   const { address } = useAccount();
 
@@ -155,7 +164,7 @@ export const Form = ({ struBalance }: IProps) => {
             <span className={styles.stake}>Stake</span>
             <div className={styles.rest}>
               <span className={styles.rewardsName}>Reward rate:</span>
-              <span className={styles.rewardsValue}>{rate}</span>
+              <span className={styles.rewardsValue}>{_rate}</span>
               <span className={styles.rewardUnities}>STRU/week</span>
             </div>
           </h2>

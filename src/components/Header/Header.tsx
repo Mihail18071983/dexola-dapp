@@ -58,7 +58,7 @@ export const Header = ({ onOpenModal }: IProps) => {
     <header className={styles.header}>
       <div className={containerStyles.container}>
         <div className={styles.menuWrapper}>
-          <button className={styles.logo}>
+          <button aria-label="logo" className={styles.logo}>
             <Logo className={styles.icon} width="34" height="20" />
           </button>
           {!isConnected ? (
