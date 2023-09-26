@@ -7,6 +7,7 @@ The application has responsive design and could be displayed appropriately from 
 
 For launching application  you just need moving to the https://dexola-dapp.vercel.app/
 
+# For launching application on mobile device from metamask browser directly you need moving to the https://metamask.app.link/dapp/dexola-dapp.vercel.app/ 
 
 
 ## Usage
