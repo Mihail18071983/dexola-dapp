@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useAccount} from "wagmi";
 import { Header } from "./components/Header/Header";
 import { Main } from "./components/Main/Main";
 import { Footer } from "./components/Footer/Footer";
@@ -13,6 +14,9 @@ function App() {
   const [width] = useWindowSize();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>("");
+  const { isDisconnected } = useAccount();
+  
+
   
   const openModal = (content: string) => {
     setShowModal(true);
@@ -24,12 +28,15 @@ function App() {
   };
 
   useEffect(() => {
+    if (isDisconnected) {
+      localStorage.clear()
+    }
     if (width > 743) {
       setPosition(toast.POSITION.BOTTOM_RIGHT);
     } else {
       setPosition(toast.POSITION.BOTTOM_CENTER);
     }
-  }, [width, position]);
+  }, [width, position, isDisconnected]);
 
   return (
     <>

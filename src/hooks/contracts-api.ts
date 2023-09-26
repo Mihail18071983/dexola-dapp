@@ -45,6 +45,7 @@ export const useStakedBalance = () => {
     ...starRunnerStakingContractConfig,
     functionName: "balanceOf",
     args: [userWalletAddress!],
+    enabled: Boolean(userWalletAddress),
     watch: true,
   });
 
@@ -57,6 +58,7 @@ export const useReward = () => {
     ...starRunnerStakingContractConfig,
     functionName: "earned",
     args: [userWalletAddress!],
+    enabled: Boolean(userWalletAddress),
     watch: true,
   });
   return { data, isSuccess };
@@ -77,6 +79,7 @@ export const useUserBalance = () => {
     ...starRunnerTokenContractConfig,
     functionName: "balanceOf",
     args: [userWalletAddress!],
+    enabled: Boolean(userWalletAddress),
     watch: true,
   });
   return { data, refetch, isSuccess };

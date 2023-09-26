@@ -89,12 +89,10 @@ export const Form = ({ struBalance }: IProps) => {
   
 
   useEffect(() => { 
-    console.log("render");
     const rate = ((stakedBalance * available) / totalStake + amountVAlue).toFixed(
     2
   );
     setRate(rate);
-    console.log('reawrd rate', rate)
   }, [amountVAlue, available, stakedBalance, totalStake])
 
 
