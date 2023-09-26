@@ -2,8 +2,7 @@ import {
   starRunnerTokenContractConfig,
   starRunnerStakingContractConfig,
 } from "../shared/utils/contracts";
-
-import { ErrorMsg } from "../unused/ErrorMsg";
+import { ErrorMsg } from "../components/Form/ClaimRewardsForm";
 
 import {
   useAccount,
