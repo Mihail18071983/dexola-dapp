@@ -13,7 +13,7 @@ export const CustomLoader = ({ width, height }: IProps) => {
         width={width}
         height={height}
         strokeWidth={6}
-        color="rgba(32, 254, 81, 1)"
+        color="var(--accepted-color)"
         secondaryColor="rgba(110, 117, 139, 1)"
       />
     </>

@@ -14,11 +14,11 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background-color: rgba(32, 254, 81, 1);
+  background-color: var(--accepted-color);
 }
 
 .rejected {
-  background-color: #fe2d20;
+  background-color:var(--reject-color);
 }
 
 .textContent {
