@@ -10,6 +10,23 @@ For launching application  you just need moving to the https://dexola-dapp.verce
 # For launching application on mobile device from metamask browser directly you need moving to the https://metamask.app.link/dapp/dexola-dapp.vercel.app/ 
 
 
+## Installation
+
+Before installation be sure that you have Node.js at least 16v installed.
+You can check it running command node -v in terminal.
+Clone this repository to your local machine:
+
+git clone https://github.com/Mihail18071983/dexola-dapp
+
+Navigate to the project directory:
+
+- cd dexola_dapp
+
+Install the project dependencies:
+
+- npm install
+
+
 ## Usage
 
 After launching you could see start window 
@@ -54,5 +71,8 @@ The web application was designed using the following technologies:
 4. For connecting wallet -rainbowkit
 5. For rendering complicated content on different type of devices is used pattern which named render by condition.
 6. For form building -react-hook-form.
+
+
+
 
 
