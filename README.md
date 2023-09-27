@@ -61,6 +61,19 @@ To close modal window this promt you need to touch by backdrop window (not by me
 ### <img width="200" src="/public/promt.png" alt="window with promt">
 
 
+## Environment Variables
+
+In this project, the following environment variables are used:
+
+VITE_CONTRACT_STAKING_ADDRESS - address of  starrunner staking contract
+
+VITE_CONTRACT_TOKEN_ADDRESS -adress of starrunner token contract
+
+VITE_CONFIG_IFURA_API_KEY - your infura API key
+
+VITE_WALLET_CONNECT_PROJECT_ID - Project ID on wallet connect
+
+
 ## Technologies
 
 The web application was designed using the following technologies:
@@ -71,6 +84,8 @@ The web application was designed using the following technologies:
 4. For connecting wallet -rainbowkit
 5. For rendering complicated content on different type of devices is used pattern which named render by condition.
 6. For form building -react-hook-form.
+
+
 
 
 
