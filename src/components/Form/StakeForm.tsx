@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Form.module.scss";
 import { toast } from "react-toastify";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Button } from "../../shared/Button/Button";
@@ -46,7 +46,6 @@ const CONTRACT_STAKING_ADDRESS = import.meta.env.VITE_CONTRACT_STAKING_ADDRESS;
 
 export const Form = ({ struBalance }: IProps) => {
   const {
-    register,
     handleSubmit,
     control,
     reset,
@@ -86,15 +85,13 @@ export const Form = ({ struBalance }: IProps) => {
   const remaining = Number(periodFinish) - currentTimeStamp;
   const available = remaining * rewardRate;
 
-  
-
-  useEffect(() => { 
-    const rate = ((stakedBalance * available) / totalStake + amountVAlue).toFixed(
-    2
-  );
+  useEffect(() => {
+    const rate = (
+      (stakedBalance * available) / totalStake +
+      amountVAlue
+    ).toFixed(2);
     setRate(rate);
-  }, [amountVAlue, available, stakedBalance, totalStake])
-
+  }, [amountVAlue, available, stakedBalance, totalStake]);
 
   const { address } = useAccount();
 
@@ -117,7 +114,7 @@ export const Form = ({ struBalance }: IProps) => {
   } = useContractWrite({
     ...starRunnerStakingContractConfig,
     functionName: "stake",
-    args: [BigInt(amountVAlue * 1e18) ?? 69420],
+    args: [BigInt(Math.round(amountVAlue * 1e18)) || 0n],
     onError() {
       ErrorMsg();
     },
@@ -168,17 +165,26 @@ export const Form = ({ struBalance }: IProps) => {
             </div>
           </h2>
           <label className={styles.label} htmlFor="amount">
-            <input
-              id="amount"
-              className={styles.input}
-              {...register("amount", {
-                required: true,
-                validate: (value) =>
-                  Number(value) > 0 || "Must be a positive number",
-              })}
-              type="number"
-              placeholder="Enter stake amount"
-              step={0.01}
+            <Controller
+              name="amount"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: "This field is required",
+                pattern: {
+                  value: /^\d+(\.\d{1,18})?$/,
+                  message:
+                    "Must be a positive number with up to 18 decimal places",
+                },
+              }}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  type="number"
+                  placeholder="Enter stake amount"
+                  className={styles.input}
+                />
+              )}
             />
             {errors.amount && (
               <p className={styles.errMessage}>{errors.amount.message}</p>
