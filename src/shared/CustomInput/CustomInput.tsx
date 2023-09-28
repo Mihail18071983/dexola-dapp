@@ -1,26 +1,34 @@
 import React from "react";
-import { Control, Controller, FieldErrors, useForm } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  RegisterOptions,
+} from "react-hook-form";
 import styles from "./CustomInput.module.scss";
 
 interface IProps {
   placeholder: string;
   control: Control<{
     amount: string;
-  }>
-  errors:FieldErrors<{
+  }>;
+  errors: FieldErrors<{
     amount: string;
-}>
+  }>;
+  _rules?:
+    | Omit<
+        RegisterOptions<
+          {
+            amount: string;
+          },
+          "amount"
+        >,
+        "valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
+      >
+    | undefined;
 }
 
-export const CustomInput = ({placeholder, control}:IProps) => {
-  const {
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      amount: "",
-    },
-    mode: "onChange",
-  });
+export const CustomInput = ({ placeholder, control, _rules, errors }: IProps) => {
   return (
     <>
       <Controller
@@ -33,6 +41,8 @@ export const CustomInput = ({placeholder, control}:IProps) => {
             value: /^\d+(\.\d{1,18})?$/,
             message: "Must be a positive number with up to 18 decimal places",
           },
+          validate: (value) => Number(value) >= 0 || "Must be a positive number",
+          ..._rules
         }}
         render={({ field }) => (
           <input

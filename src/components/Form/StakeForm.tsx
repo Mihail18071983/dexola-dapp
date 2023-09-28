@@ -170,6 +170,9 @@ export const Form = ({ struBalance }: IProps) => {
               control={control}
               errors={errors}
               placeholder="Enter stake amount"
+              _rules={{
+                validate: (value) => Number(value) > 0 || "Must be a positive number",
+              }}
             />
           </label>
 

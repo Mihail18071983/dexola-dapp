@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import styles from "./Form.module.scss";
-import { SubmitHandler, useForm} from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Button } from "../../shared/Button/Button";
@@ -131,6 +131,10 @@ export const Form = () => {
               control={control}
               errors={errors}
               placeholder="Enter withdraw amount"
+              _rules={{
+                validate: (value) =>
+                  Number(value) > 0 || "Must be a positive number",
+              }}
             />
           </label>
 
