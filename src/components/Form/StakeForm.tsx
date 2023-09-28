@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Form.module.scss";
 import { toast } from "react-toastify";
-import { SubmitHandler, useForm, Controller } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Button } from "../../shared/Button/Button";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
+import { CustomInput } from "../../shared/CustomInput/CustomInput";
 
 import {
   usePrepareContractWrite,
@@ -165,30 +166,11 @@ export const Form = ({ struBalance }: IProps) => {
             </div>
           </h2>
           <label className={styles.label} htmlFor="amount">
-            <Controller
-              name="amount"
+            <CustomInput
               control={control}
-              defaultValue=""
-              rules={{
-                required: "This field is required",
-                pattern: {
-                  value: /^\d+(\.\d{1,18})?$/,
-                  message:
-                    "Must be a positive number with up to 18 decimal places",
-                },
-              }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="number"
-                  placeholder="Enter stake amount"
-                  className={styles.input}
-                />
-              )}
+              errors={errors}
+              placeholder="Enter stake amount"
             />
-            {errors.amount && (
-              <p className={styles.errMessage}>{errors.amount.message}</p>
-            )}
           </label>
 
           <p className={styles.availableTotens}>

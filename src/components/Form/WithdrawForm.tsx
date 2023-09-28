@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import styles from "./Form.module.scss";
-import { SubmitHandler, useForm, Controller } from "react-hook-form";
+import { SubmitHandler, useForm} from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
 import { Button } from "../../shared/Button/Button";
@@ -9,6 +9,7 @@ import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.sv
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import { Msg } from "../../shared/Notification/Msg";
 import { ErrorMsg } from "./ClaimRewardsForm";
+import { CustomInput } from "../../shared/CustomInput/CustomInput";
 
 import {
   usePrepareContractWrite,
@@ -80,7 +81,7 @@ export const Form = () => {
   } = useContractWrite({
     ...starRunnerStakingContractConfig,
     functionName: "withdraw",
-    args: [BigInt(Math.round(amountVAlue * 1e18))||0n],
+    args: [BigInt(Math.round(amountVAlue * 1e18)) || 0n],
     onError() {
       ErrorMsg();
     },
@@ -126,30 +127,11 @@ export const Form = () => {
             <span className={styles.stake}>Withdraw</span>
           </h2>
           <label className={styles.label} htmlFor="amount">
-            <Controller
-              name="amount"
+            <CustomInput
               control={control}
-              defaultValue=""
-              rules={{
-                required: "This field is required",
-                pattern: {
-                  value: /^\d+(\.\d{1,18})?$/,
-                  message:
-                    "Must be a positive number with up to 18 decimal places",
-                },
-              }}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  type="number"
-                  placeholder="Enter withdraw amount"
-                  className={styles.input}
-                />
-              )}
+              errors={errors}
+              placeholder="Enter withdraw amount"
             />
-            {errors.amount && (
-              <p className={styles.errMessage}>{errors.amount.message}</p>
-            )}
           </label>
 
           <p className={styles.availableTotens}>
