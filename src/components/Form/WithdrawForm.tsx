@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAppContextValue } from "../../hooks/useContexValue";
 import { toast } from "react-toastify";
 import styles from "./Form.module.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -10,6 +11,7 @@ import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.sv
 import { Msg } from "../../shared/Notification/Msg";
 import { ErrorMsg } from "./ClaimRewardsForm";
 import { CustomInput } from "../../shared/CustomInput/CustomInput";
+import { useClaimRewards } from "../../hooks/contracts-api";
 
 import {
   usePrepareContractWrite,
@@ -46,9 +48,10 @@ export const Form = () => {
     mode: "onChange",
   });
 
+  const { rewardsAvailable } = useAppContextValue();
+
   const { data: stakedBalanceData } = useStakedBalance();
   const stakedBalance = formatted(stakedBalanceData).toFixed(0);
-
   const [Amount, setAmount] = useState<number | null>(null);
 
   const successMsg = () =>
@@ -64,6 +67,7 @@ export const Form = () => {
   const amountVAlue = Number(watch("amount"));
 
   const { address } = useAccount();
+  const { claim } = useClaimRewards();
 
   const { config: tokenConfig } = usePrepareContractWrite({
     ...starRunnerTokenContractConfig,
@@ -87,8 +91,31 @@ export const Form = () => {
     },
   });
 
+  const {
+    data: withdrawAllData,
+    write: withdrawAll,
+    isLoading: isWaitingForAllWithdrawing,
+  } = useContractWrite({
+    ...starRunnerStakingContractConfig,
+    functionName: "withdraw",
+    args: [stakedBalanceData || 0n],
+    onError() {
+      ErrorMsg();
+    },
+  });
+
   const { isLoading: isWaitingForTransaction } = useWaitForTransaction({
     hash: data?.hash,
+    onSuccess() {
+      successMsg();
+    },
+    onError() {
+      ErrorMsg();
+    },
+  });
+
+  const { isLoading: isWaitingForTransactionAll } = useWaitForTransaction({
+    hash: withdrawAllData?.hash,
     onSuccess() {
       successMsg();
     },
@@ -116,6 +143,19 @@ export const Form = () => {
       reset();
     } catch (error) {
       ErrorMsg();
+    }
+  };
+
+  const withdrawAllAndClaim = async () => {
+    if (stakedBalance || rewardsAvailable) {
+      try {
+        setAmount(Number(rewardsAvailable));
+        await approveTokenAmount?.();
+        withdrawAll?.();
+        claim?.();
+      } catch (error) {
+        ErrorMsg();
+      }
     }
   };
 
@@ -186,6 +226,25 @@ export const Form = () => {
               isWaitingForTransaction ||
               isWaitingForApprove ||
               (isWaitingForWithdrawing && (
+                <CustomLoader width={32} height={32} />
+              ))}
+          </Button>
+
+          <Button
+            onClick={withdrawAllAndClaim}
+            className={`${styles.btn} ${styles.additionalBtn}`}
+            type="button"
+          >
+            <span className={styles.btnContent}>
+              {isWaitingForTransactionAll ||
+              isWaitingForApprove ||
+              isWaitingForWithdrawing
+                ? "Processing..."
+                : "withdraw all & Claim rewards"}
+            </span>
+            {isWaitingForTransactionAll ||
+              isWaitingForApprove ||
+              (isWaitingForAllWithdrawing && (
                 <CustomLoader width={32} height={32} />
               ))}
           </Button>

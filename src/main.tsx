@@ -1,11 +1,12 @@
-import "./polyfills"
-import '@rainbow-me/rainbowkit/styles.css'
+import "./polyfills";
+import "@rainbow-me/rainbowkit/styles.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.scss";
 import React from "react";
 import { WagmiConfig } from "wagmi";
 import { config, chains } from "./wagmi";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { AppProvider } from "./shared/utils/Appcontext";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import "@fontsource/kanit/400.css";
@@ -24,7 +25,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <WagmiConfig config={config}>
       <RainbowKitProvider chains={chains} modalSize="wide">
         <Router basename="/">
-          <App />
+          <AppProvider>
+            <App />
+          </AppProvider>
         </Router>
       </RainbowKitProvider>
     </WagmiConfig>
