@@ -230,7 +230,7 @@ export const Form = () => {
               ))}
           </Button>
 
-          <Button disabled={Number(stakedBalance)!==0 && Number(rewardsAvailable)!==0}
+          <Button disabled={Number(stakedBalance)==0 && Number(rewardsAvailable)==0}
             onClick={withdrawAllAndClaim}
             className={`${styles.btn} ${styles.additionalBtn}`}
             type="button"
