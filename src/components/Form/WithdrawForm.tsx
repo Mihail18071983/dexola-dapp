@@ -147,7 +147,7 @@ export const Form = () => {
   };
 
   const withdrawAllAndClaim = async () => {
-    if (stakedBalance || rewardsAvailable) {
+    if (Number(stakedBalance)!==0 || Number(rewardsAvailable)!==0) {
       try {
         setAmount(Number(rewardsAvailable));
         await approveTokenAmount?.();
@@ -230,7 +230,7 @@ export const Form = () => {
               ))}
           </Button>
 
-          <Button
+          <Button disabled={Number(stakedBalance)!==0 && Number(rewardsAvailable)!==0}
             onClick={withdrawAllAndClaim}
             className={`${styles.btn} ${styles.additionalBtn}`}
             type="button"
