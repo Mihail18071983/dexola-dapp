@@ -6,7 +6,6 @@ import { truncateAddress } from "../../shared/utils/truncateAddress";
 import { Promt } from "../../shared/Promt/Promt";
 
 import {
-  useStakedBalance,
   useTotalStake,
   usePeriodFinish,
   useReward,
@@ -14,6 +13,8 @@ import {
   useUserBalance,
   useUserEther,
 } from "../../hooks/contracts-api";
+
+import { useAppContextValue } from "../../hooks/useContexValue";
 import styles from "./Header.module.scss";
 import containerStyles from "../../Container.module.scss";
 import { Logo } from "../../shared/svgComponents/Logo";
@@ -29,13 +30,13 @@ interface IProps {
 export const Header = ({ onOpenModal }: IProps) => {
   const DAY_Duration = 24 * 60 * 60;
   const { address, isConnected } = useAccount();
-  const { data: stakedBalanceData } = useStakedBalance();
   const { data: totalStakeUsersData } = useTotalStake();
   const { data: periodFinish } = usePeriodFinish();
   const { data: rewardData } = useReward();
   const { data: numberRewordsForPeriodData } = useRewardForPeriod();
   const { data: userTokenBalanceData } = useUserBalance();
   const { data: userEtherBalance } = useUserEther();
+  const {stakedBalanceData}=useAppContextValue();
 
   const tokenBalanceValue = formatted(userTokenBalanceData);
   const stakedBalance = formatted(stakedBalanceData).toFixed(2);

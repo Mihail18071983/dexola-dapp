@@ -7,7 +7,7 @@ interface IContext {
 }
 
 interface IContextType {
-  stakedBalance: string | undefined;
+  stakedBalanceData: bigint | undefined;
   rewardsAvailable: string | undefined;
 }
 
@@ -16,11 +16,11 @@ export const AppContext = createContext<IContextType | null>(null);
 export const AppProvider = ({ children }: IContext) => {
   const { data: stakedBalanceData } = useStakedBalance();
   const { data: rewardData } = useReward();
-  const stakedBalance = formatted(stakedBalanceData).toFixed(0);
+
   const rewardsAvailable = formatted(rewardData).toFixed(0);
 
   return (
-    <AppContext.Provider value={{ stakedBalance, rewardsAvailable }}>
+    <AppContext.Provider value={{ stakedBalanceData, rewardsAvailable }}>
       {children}
     </AppContext.Provider>
   );

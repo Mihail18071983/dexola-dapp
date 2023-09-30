@@ -11,7 +11,6 @@ import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.sv
 import { Msg } from "../../shared/Notification/Msg";
 import { ErrorMsg } from "./ClaimRewardsForm";
 import { CustomInput } from "../../shared/CustomInput/CustomInput";
-import { useClaimRewards } from "../../hooks/contracts-api";
 
 import {
   usePrepareContractWrite,
@@ -67,7 +66,6 @@ export const Form = () => {
   const amountVAlue = Number(watch("amount"));
 
   const { address } = useAccount();
-  const { claim } = useClaimRewards();
 
   const { config: tokenConfig } = usePrepareContractWrite({
     ...starRunnerTokenContractConfig,
@@ -93,12 +91,11 @@ export const Form = () => {
 
   const {
     data: withdrawAllData,
-    write: withdrawAll,
+    writeAsync: withdrawAll,
     isLoading: isWaitingForAllWithdrawing,
   } = useContractWrite({
     ...starRunnerStakingContractConfig,
-    functionName: "withdraw",
-    args: [stakedBalanceData || 0n],
+    functionName: "exit",
     onError() {
       ErrorMsg();
     },
@@ -147,12 +144,10 @@ export const Form = () => {
   };
 
   const withdrawAllAndClaim = async () => {
-    if (Number(stakedBalance)!==0 || Number(rewardsAvailable)!==0) {
+    if (Number(stakedBalance) !== 0 || Number(rewardsAvailable) !== 0) {
       try {
         setAmount(Number(rewardsAvailable));
-        await approveTokenAmount?.();
-        withdrawAll?.();
-        claim?.();
+        await withdrawAll?.();
       } catch (error) {
         ErrorMsg();
       }
@@ -230,23 +225,24 @@ export const Form = () => {
               ))}
           </Button>
 
-          <Button disabled={Number(stakedBalance)==0 && Number(rewardsAvailable)==0}
+          <Button
+            disabled={
+              (Number(stakedBalance) == 0 && Number(rewardsAvailable) == 0) ||
+              isWaitingForTransactionAll ||
+              isWaitingForAllWithdrawing
+            }
             onClick={withdrawAllAndClaim}
             className={`${styles.btn} ${styles.additionalBtn}`}
             type="button"
           >
             <span className={styles.btnContent}>
-              {isWaitingForTransactionAll ||
-              isWaitingForApprove ||
-              isWaitingForWithdrawing
+              {isWaitingForTransactionAll || isWaitingForAllWithdrawing
                 ? "Processing..."
                 : "withdraw all & Claim rewards"}
             </span>
-            {isWaitingForTransactionAll ||
-              isWaitingForApprove ||
-              (isWaitingForAllWithdrawing && (
-                <CustomLoader width={32} height={32} />
-              ))}
+            {(isWaitingForTransactionAll || isWaitingForAllWithdrawing) && (
+              <CustomLoader width={32} height={32} />
+            )}
           </Button>
         </div>
       </form>

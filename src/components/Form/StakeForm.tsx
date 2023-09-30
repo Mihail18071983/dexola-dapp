@@ -26,9 +26,10 @@ import {
   useUserBalance,
   useRewardRate,
   useTotalStake,
-  useStakedBalance,
   usePeriodFinish,
 } from "../../hooks/contracts-api";
+
+import { useAppContextValue } from "../../hooks/useContexValue";
 
 import {
   starRunnerStakingContractConfig,
@@ -76,8 +77,8 @@ export const Form = ({ struBalance }: IProps) => {
 
   const { data: rewardRateData } = useRewardRate();
   const { data: totalStakeData } = useTotalStake();
-  const { data: stakedBalanceData } = useStakedBalance();
   const { data: periodFinish } = usePeriodFinish();
+  const { stakedBalanceData } = useAppContextValue();
 
   const amountVAlue = Number(watch("amount"));
   const totalStake = formatted(totalStakeData);
@@ -171,7 +172,8 @@ export const Form = ({ struBalance }: IProps) => {
               errors={errors}
               placeholder="Enter stake amount"
               _rules={{
-                validate: (value) => Number(value) > 0 || "Must be a positive number",
+                validate: (value) =>
+                  Number(value) > 0 || "Must be a positive number",
               }}
             />
           </label>
@@ -219,10 +221,10 @@ export const Form = ({ struBalance }: IProps) => {
                 ? "Staking..."
                 : "Stake"}
             </span>
-            {isSubmitting ||
+            {(isSubmitting ||
               isWaitingForTransaction ||
               isWatingForApprove ||
-              (isWaitingForStaking && <CustomLoader width={32} height={32} />)}
+              isWaitingForStaking) && <CustomLoader width={32} height={32} />}
           </Button>
         </div>
       </form>
