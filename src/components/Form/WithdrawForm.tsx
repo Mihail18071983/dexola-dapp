@@ -11,6 +11,7 @@ import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.sv
 import { Msg } from "../../shared/Notification/Msg";
 import { ErrorMsg } from "./ClaimRewardsForm";
 import { CustomInput } from "../../shared/CustomInput/CustomInput";
+import { CONTRACT_STAKING_ADDRESS } from "../../Project_constants";
 
 import {
   usePrepareContractWrite,
@@ -19,7 +20,7 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 
-import { useStakedBalance } from "../../hooks/contracts-api";
+import { useStakedBalance, useCheckAllowance } from "../../hooks/contracts-api";
 import { formatted } from "../../shared/utils/formatUnits";
 
 import {
@@ -30,8 +31,6 @@ import {
 type FormData = {
   amount: string;
 };
-
-const CONTRACT_STAKING_ADDRESS = import.meta.env.VITE_CONTRACT_STAKING_ADDRESS;
 
 export const Form = () => {
   const {
@@ -48,6 +47,7 @@ export const Form = () => {
   });
 
   const { rewardsAvailable } = useAppContextValue();
+  const { data: allowance } = useCheckAllowance();
 
   const { data: stakedBalanceData } = useStakedBalance();
   const stakedBalance = formatted(stakedBalanceData).toFixed(0);
@@ -70,7 +70,7 @@ export const Form = () => {
   const { config: tokenConfig } = usePrepareContractWrite({
     ...starRunnerTokenContractConfig,
     functionName: "approve",
-    args: [CONTRACT_STAKING_ADDRESS, stakedBalanceData || BigInt(2000 * 1e18)],
+    args: [CONTRACT_STAKING_ADDRESS, stakedBalanceData!],
   });
 
   const { writeAsync: approveTokenAmount, isLoading: isWaitingForApprove } =
@@ -134,8 +134,11 @@ export const Form = () => {
 
       setAmount(amountVAlue);
 
-      await approveTokenAmount?.();
-      writeWithdraw?.();
+      if (allowance < amountVAlue) {
+        await approveTokenAmount?.();
+      } else {
+        writeWithdraw?.();
+      }
 
       reset();
     } catch (error) {

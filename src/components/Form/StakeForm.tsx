@@ -9,6 +9,7 @@ import { Button } from "../../shared/Button/Button";
 import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.svg";
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import { CustomInput } from "../../shared/CustomInput/CustomInput";
+import { SEPOLIA_ID, CONTRACT_STAKING_ADDRESS } from "../../Project_constants";
 
 import {
   usePrepareContractWrite,
@@ -28,6 +29,7 @@ import {
   useRewardRate,
   useTotalStake,
   usePeriodFinish,
+  useCheckAllowance,
 } from "../../hooks/contracts-api";
 
 import { useAppContextValue } from "../../hooks/useContexValue";
@@ -45,8 +47,6 @@ interface IProps {
   struBalance: string | undefined;
 }
 
-const CONTRACT_STAKING_ADDRESS = import.meta.env.VITE_CONTRACT_STAKING_ADDRESS;
-
 export const Form = ({ struBalance }: IProps) => {
   const {
     handleSubmit,
@@ -62,11 +62,9 @@ export const Form = ({ struBalance }: IProps) => {
   });
 
   const { data: userTokenBalanceData } = useUserBalance();
-
   const [Amount, setAmount] = useState<number | null>(null);
-  const [_rate, setRate] = useState<string | null|number>(null);
-  const {chain}=useNetwork();
- 
+  const [_rate, setRate] = useState<string | null | number>(null);
+  const { chain } = useNetwork();
 
   const successMsg = () =>
     toast(
@@ -82,6 +80,7 @@ export const Form = ({ struBalance }: IProps) => {
   const { data: totalStakeData } = useTotalStake();
   const { data: periodFinish } = usePeriodFinish();
   const { stakedBalanceData } = useAppContextValue();
+  const { data: allowance } = useCheckAllowance();
 
   const amountVAlue = Number(watch("amount"));
   const totalStake = formatted(totalStakeData);
@@ -91,8 +90,10 @@ export const Form = ({ struBalance }: IProps) => {
   const available = remaining * rewardRate;
 
   const rate = useMemo(() => {
-    return  chain?.id===11155111?((stakedBalance * available) / totalStake + amountVAlue).toFixed(0):0;
-    }, [amountVAlue, available, chain?.id, stakedBalance, totalStake]);
+    return chain?.id === SEPOLIA_ID
+      ? ((stakedBalance * available) / totalStake + amountVAlue).toFixed(0)
+      : 0;
+  }, [amountVAlue, available, chain?.id, stakedBalance, totalStake]);
 
   useEffect(() => {
     setRate(rate);
@@ -103,10 +104,7 @@ export const Form = ({ struBalance }: IProps) => {
   const { config: tokenConfig } = usePrepareContractWrite({
     ...starRunnerTokenContractConfig,
     functionName: "approve",
-    args: [
-      CONTRACT_STAKING_ADDRESS,
-      userTokenBalanceData ?? BigInt(20000 * 1e18),
-    ],
+    args: [CONTRACT_STAKING_ADDRESS, userTokenBalanceData!],
   });
 
   const { writeAsync: approveTokenAmount, isLoading: isWatingForApprove } =
@@ -148,8 +146,11 @@ export const Form = ({ struBalance }: IProps) => {
 
       setAmount(amountVAlue);
 
-      await approveTokenAmount?.();
-      writeStaking?.();
+      if (allowance < amountVAlue) {
+        await approveTokenAmount?.();
+      } else {
+        writeStaking?.();
+      }
 
       reset();
     } catch (error) {

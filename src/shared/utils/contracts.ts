@@ -1,6 +1,8 @@
+import { CONTRACT_STAKING_ADDRESS, CONTRACT_TOKEN_ADDRESS } from "../../Project_constants";
+
 
 export const starRunnerStakingContractConfig = {
-    address: import.meta.env.VITE_CONTRACT_STAKING_ADDRESS,
+    address: CONTRACT_STAKING_ADDRESS,
     abi:[
   {
     "inputs": [
@@ -388,7 +390,7 @@ export const starRunnerStakingContractConfig = {
 }
 
 export const starRunnerTokenContractConfig = {
-    address: import.meta.env.VITE_CONTRACT_TOKEN_ADDRESS,
+    address: CONTRACT_TOKEN_ADDRESS,
     abi:[
   {
     "inputs": [

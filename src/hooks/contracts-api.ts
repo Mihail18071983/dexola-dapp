@@ -11,6 +11,7 @@ import {
   usePrepareContractWrite,
   useContractWrite,
 } from "wagmi";
+import { CONTRACT_STAKING_ADDRESS } from "../Project_constants";
 
 export const usePeriodFinish = () => {
   const { data, isSuccess } = useContractRead({
@@ -110,4 +111,15 @@ export const useClaimRewards = () => {
     },
   });
   return { claim, data, isWaitingRewardsWritten };
+};
+
+export const useCheckAllowance = () => {
+  const {address:userAddress } = useAccount();
+  const { data } = useContractRead({
+    ...starRunnerTokenContractConfig,
+    functionName: "allowance",
+    args: [userAddress!, CONTRACT_STAKING_ADDRESS],
+    watch: true,
+  });
+  return { data:Number(data) };
 };

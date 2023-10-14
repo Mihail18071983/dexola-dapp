@@ -9,6 +9,8 @@ import { AiFillWarning } from "react-icons/ai";
 import { Button } from "../../shared/Button/Button";
 import { ErrorMsg } from "../Form/ClaimRewardsForm";
 import { CustomLoader } from "../../shared/CustomLoader/CustomLoader";
+import { DAY_Duration } from "../../Project_constants";
+import { SEPOLIA_ID } from "../../Project_constants";
 
 import {
   useTotalStake,
@@ -33,7 +35,6 @@ interface IProps {
 }
 
 export const Header = ({ onOpenModal }: IProps) => {
-  const DAY_Duration = 24 * 60 * 60;
   const { address, isConnected } = useAccount();
   const { data: totalStakeUsersData } = useTotalStake();
   const { data: periodFinish } = usePeriodFinish();
@@ -61,12 +62,12 @@ export const Header = ({ onOpenModal }: IProps) => {
   const trancatedAdress = address ? truncateAddress(address) : "";
 
   const Days =
-    chain?.id === 11155111
+    chain?.id === SEPOLIA_ID
       ? ((Number(periodFinish) - currentTimeStamp) / DAY_Duration).toFixed(0)
       : 0;
 
   const APR =
-    chain?.id === 11155111
+    chain?.id === SEPOLIA_ID
       ? ((totalRewardForPeriod * 100) / totalStakeUsers).toFixed(0) || 0
       : 0;
 
@@ -166,12 +167,12 @@ export const Header = ({ onOpenModal }: IProps) => {
             </div>
           </div>
         </div>
-        {chain?.id !== 11155111 && (
+        {chain?.id !== SEPOLIA_ID && (
           <div className={styles.switchWrapper}>
             <Button
               className={styles.btn}
               type="button"
-              onClick={() => switchNetwork!(11155111)}
+              onClick={() => switchNetwork!(SEPOLIA_ID)}
             >
               <span className={styles.btnContent}>
                 {isLoading ? "switing" : "switch"} to the Sepolia
