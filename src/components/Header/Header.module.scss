@@ -1,5 +1,5 @@
 .header {
-  padding: 15px 0;
+  padding: 11px 0;
   width: 100%;
   top: 0;
   background-image: radial-gradient(
@@ -19,6 +19,9 @@
   margin-bottom: 26px;
   @media screen and (min-width: 744px) {
     margin-bottom: 16px;
+  }
+  @media screen and (min-width: 1440px) {
+    margin-bottom: 10px;
   }
 }
 
@@ -269,6 +272,9 @@
     padding-top: 32px;
     padding-bottom: 32px;
   }
+  @media screen and (min-width: 1440px) {
+    padding-left: 87px;
+  }
 }
 
 .clientInfoWrapper {
@@ -374,4 +380,30 @@
     font-weight: 400;
     line-height: 1.25;
   }
+}
+
+.add_wrapper {
+  @media screen and (min-width:1440px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+.switchWrapper {
+ margin:0  auto;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+
+.btn {
+  width: 100%;
+  margin-bottom: 10px;
+  @media screen and (min-width: 744px) {
+    width: max-content;
+  }
+}
+.btnContent {
+  margin-left: auto;
+  margin-right: auto;
 }

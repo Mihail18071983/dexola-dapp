@@ -16,6 +16,7 @@ function App() {
   const [modalContent, setModalContent] = useState<string>("");
   const { isDisconnected } = useAccount();
   
+ 
 
   
   const openModal = (content: string) => {

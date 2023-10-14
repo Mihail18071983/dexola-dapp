@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { useNetwork } from "wagmi";
 import styles from "./Form.module.scss";
 import { toast } from "react-toastify";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -63,7 +64,9 @@ export const Form = ({ struBalance }: IProps) => {
   const { data: userTokenBalanceData } = useUserBalance();
 
   const [Amount, setAmount] = useState<number | null>(null);
-  const [_rate, setRate] = useState<string | null>(null);
+  const [_rate, setRate] = useState<string | null|number>(null);
+  const {chain}=useNetwork();
+ 
 
   const successMsg = () =>
     toast(
@@ -87,13 +90,13 @@ export const Form = ({ struBalance }: IProps) => {
   const remaining = Number(periodFinish) - currentTimeStamp;
   const available = remaining * rewardRate;
 
+  const rate = useMemo(() => {
+    return  chain?.id===11155111?((stakedBalance * available) / totalStake + amountVAlue).toFixed(0):0;
+    }, [amountVAlue, available, chain?.id, stakedBalance, totalStake]);
+
   useEffect(() => {
-    const rate = (
-      (stakedBalance * available) / totalStake +
-      amountVAlue
-    ).toFixed(2);
     setRate(rate);
-  }, [amountVAlue, available, stakedBalance, totalStake]);
+  }, [rate]);
 
   const { address } = useAccount();
 

@@ -3,7 +3,7 @@ import styles from "./Msg.module.scss";
 
 interface IProps {
   text1: string;
-  text2: string;
+  text2?: string;
   Component?: React.FC;
   approved?: boolean;
 }
