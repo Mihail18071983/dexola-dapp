@@ -5,6 +5,9 @@
   @media screen and (max-width: 743px) {
    border: 16px;
   }
+  @media screen and (min-width:1440px){
+    padding-top: 40px;
+  }
 }
 
 .menuWrapper {
@@ -21,6 +24,10 @@
   justify-content: space-between;
   @media screen and (min-width: 744px) {
     justify-content: flex-start;
+  }
+  @media screen and (min-width:1440px){
+    padding-left: 120px;
+    padding-right: 120px;
   }
 }
 

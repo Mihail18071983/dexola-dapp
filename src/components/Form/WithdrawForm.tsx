@@ -13,12 +13,7 @@ import { ErrorMsg } from "./ClaimRewardsForm";
 import { CustomInput } from "../../shared/CustomInput/CustomInput";
 import { CONTRACT_STAKING_ADDRESS } from "../../Project_constants";
 
-import {
-  usePrepareContractWrite,
-  useContractWrite,
-  useAccount,
-  useWaitForTransaction,
-} from "wagmi";
+import { useContractWrite, useAccount, useWaitForTransaction } from "wagmi";
 
 import { useStakedBalance, useCheckAllowance } from "../../hooks/contracts-api";
 import { formatted } from "../../shared/utils/formatUnits";
@@ -47,7 +42,6 @@ export const Form = () => {
   });
 
   const { rewardsAvailable } = useAppContextValue();
-  const { data: allowance } = useCheckAllowance();
 
   const { data: stakedBalanceData } = useStakedBalance();
   const stakedBalance = formatted(stakedBalanceData).toFixed(0);
@@ -65,16 +59,27 @@ export const Form = () => {
 
   const amountVAlue = Number(watch("amount"));
 
-  const { address } = useAccount();
+  const { address: userAddress } = useAccount();
+  const { data: allowance } = useCheckAllowance(userAddress!);
 
-  const { config: tokenConfig } = usePrepareContractWrite({
+  const {
+    writeAsync: approveTokenAmount,
+    data: approvedTokenAmount,
+    isLoading: isWatingForApprove,
+  } = useContractWrite({
     ...starRunnerTokenContractConfig,
     functionName: "approve",
-    args: [CONTRACT_STAKING_ADDRESS, stakedBalanceData!],
   });
 
-  const { writeAsync: approveTokenAmount, isLoading: isWaitingForApprove } =
-    useContractWrite(tokenConfig);
+  const { isLoading: isWaitingForApproveTransaction } = useWaitForTransaction({
+    hash: approvedTokenAmount?.hash,
+    onSuccess() {
+      successMsg();
+    },
+    onError() {
+      ErrorMsg();
+    },
+  });
 
   const {
     data,
@@ -83,7 +88,6 @@ export const Form = () => {
   } = useContractWrite({
     ...starRunnerStakingContractConfig,
     functionName: "withdraw",
-    args: [BigInt(Math.round(amountVAlue * 1e18)) || 0n],
     onError() {
       ErrorMsg();
     },
@@ -123,7 +127,7 @@ export const Form = () => {
 
   const onSubmit: SubmitHandler<FormData> = async () => {
     try {
-      if (!address) {
+      if (!userAddress) {
         console.error("User address not available.");
         return;
       }
@@ -134,10 +138,12 @@ export const Form = () => {
 
       setAmount(amountVAlue);
 
-      if (allowance < amountVAlue) {
-        await approveTokenAmount?.();
+      if (allowance < amountVAlue * 1e18) {
+        await approveTokenAmount?.({
+          args: [CONTRACT_STAKING_ADDRESS, BigInt(amountVAlue * 1e18)],
+        }).then(() => writeWithdraw({ args: [BigInt(amountVAlue * 1e18)] }));
       } else {
-        writeWithdraw?.();
+        writeWithdraw?.({ args: [BigInt(amountVAlue * 1e18)] });
       }
 
       reset();
@@ -215,17 +221,19 @@ export const Form = () => {
             <span className={styles.btnContent}>
               {isSubmitting ||
               isWaitingForTransaction ||
-              isWaitingForApprove ||
-              isWaitingForWithdrawing
+              isWatingForApprove ||
+              isWaitingForWithdrawing ||
+              isWaitingForApproveTransaction
                 ? "Withdrawing..."
                 : "Withdraw"}
             </span>
-            {isSubmitting ||
+            {(isSubmitting ||
               isWaitingForTransaction ||
-              isWaitingForApprove ||
-              (isWaitingForWithdrawing && (
-                <CustomLoader width={32} height={32} />
-              ))}
+              isWatingForApprove ||
+              isWaitingForApproveTransaction ||
+              isWaitingForWithdrawing) && (
+              <CustomLoader width={32} height={32} />
+            )}
           </Button>
 
           <Button

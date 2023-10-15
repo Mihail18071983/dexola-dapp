@@ -167,7 +167,7 @@ export const Header = ({ onOpenModal }: IProps) => {
             </div>
           </div>
         </div>
-        {chain?.id !== SEPOLIA_ID && (
+        {chain?.id !== SEPOLIA_ID &&address && (
           <div className={styles.switchWrapper}>
             <Button
               className={styles.btn}

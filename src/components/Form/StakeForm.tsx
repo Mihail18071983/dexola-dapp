@@ -12,7 +12,6 @@ import { CustomInput } from "../../shared/CustomInput/CustomInput";
 import { SEPOLIA_ID, CONTRACT_STAKING_ADDRESS } from "../../Project_constants";
 
 import {
-  usePrepareContractWrite,
   useContractWrite,
   useAccount,
   useWaitForTransaction,
@@ -25,7 +24,6 @@ import { Msg } from "../../shared/Notification/Msg";
 import { ErrorMsg } from "./ClaimRewardsForm";
 
 import {
-  useUserBalance,
   useRewardRate,
   useTotalStake,
   usePeriodFinish,
@@ -61,7 +59,7 @@ export const Form = ({ struBalance }: IProps) => {
     mode: "onChange",
   });
 
-  const { data: userTokenBalanceData } = useUserBalance();
+
   const [Amount, setAmount] = useState<number | null>(null);
   const [_rate, setRate] = useState<string | null | number>(null);
   const { chain } = useNetwork();
@@ -80,7 +78,6 @@ export const Form = ({ struBalance }: IProps) => {
   const { data: totalStakeData } = useTotalStake();
   const { data: periodFinish } = usePeriodFinish();
   const { stakedBalanceData } = useAppContextValue();
-  const { data: allowance } = useCheckAllowance();
 
   const amountVAlue = Number(watch("amount"));
   const totalStake = formatted(totalStakeData);
@@ -99,16 +96,27 @@ export const Form = ({ struBalance }: IProps) => {
     setRate(rate);
   }, [rate]);
 
-  const { address } = useAccount();
+  const { address: userAddress } = useAccount();
+  const { data: allowance } = useCheckAllowance(userAddress!);
 
-  const { config: tokenConfig } = usePrepareContractWrite({
+  const {
+    writeAsync: approveTokenAmount,
+    data: approvedTokenAmount,
+    isLoading: isWatingForApprove,
+  } = useContractWrite({
     ...starRunnerTokenContractConfig,
     functionName: "approve",
-    args: [CONTRACT_STAKING_ADDRESS, userTokenBalanceData!],
   });
 
-  const { writeAsync: approveTokenAmount, isLoading: isWatingForApprove } =
-    useContractWrite(tokenConfig);
+  const { isLoading: isWaitingForApproveTransaction } = useWaitForTransaction({
+    hash: approvedTokenAmount?.hash,
+    onSuccess() {
+      successMsg();
+    },
+    onError() {
+      ErrorMsg();
+    },
+  });
 
   const {
     data,
@@ -117,7 +125,6 @@ export const Form = ({ struBalance }: IProps) => {
   } = useContractWrite({
     ...starRunnerStakingContractConfig,
     functionName: "stake",
-    args: [BigInt(Math.round(amountVAlue * 1e18)) || 0n],
     onError() {
       ErrorMsg();
     },
@@ -135,7 +142,7 @@ export const Form = ({ struBalance }: IProps) => {
 
   const onSubmit: SubmitHandler<FormData> = async () => {
     try {
-      if (!address) {
+      if (!userAddress) {
         console.error("User address not available.");
         return;
       }
@@ -145,11 +152,12 @@ export const Form = ({ struBalance }: IProps) => {
       }
 
       setAmount(amountVAlue);
-
-      if (allowance < amountVAlue) {
-        await approveTokenAmount?.();
+      if (allowance < amountVAlue* 1e18) {
+        await approveTokenAmount?.({
+          args: [CONTRACT_STAKING_ADDRESS, BigInt(amountVAlue * 1e18)],
+        }).then(()=>writeStaking({ args: [BigInt(amountVAlue * 1e18)] }));
       } else {
-        writeStaking?.();
+        writeStaking?.({ args: [BigInt(amountVAlue * 1e18)] });
       }
 
       reset();
@@ -213,7 +221,11 @@ export const Form = ({ struBalance }: IProps) => {
           </div>
 
           <Button
-            disabled={!amountVAlue || isWaitingForTransaction}
+            disabled={
+              !amountVAlue ||
+              isWaitingForTransaction ||
+              isWaitingForApproveTransaction
+            }
             className={styles.btn}
             type="submit"
           >
@@ -221,6 +233,7 @@ export const Form = ({ struBalance }: IProps) => {
               {isSubmitting ||
               isWaitingForTransaction ||
               isWatingForApprove ||
+              isWaitingForApproveTransaction ||
               isWaitingForStaking
                 ? "Staking..."
                 : "Stake"}
@@ -228,6 +241,7 @@ export const Form = ({ struBalance }: IProps) => {
             {(isSubmitting ||
               isWaitingForTransaction ||
               isWatingForApprove ||
+              isWaitingForApproveTransaction ||
               isWaitingForStaking) && <CustomLoader width={32} height={32} />}
           </Button>
         </div>

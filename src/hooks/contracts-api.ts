@@ -113,13 +113,13 @@ export const useClaimRewards = () => {
   return { claim, data, isWaitingRewardsWritten };
 };
 
-export const useCheckAllowance = () => {
-  const {address:userAddress } = useAccount();
+export const useCheckAllowance = (userAddress:`0x${string}`) => {
   const { data } = useContractRead({
     ...starRunnerTokenContractConfig,
     functionName: "allowance",
-    args: [userAddress!, CONTRACT_STAKING_ADDRESS],
+    args: [userAddress, CONTRACT_STAKING_ADDRESS],
     watch: true,
+    enabled: Boolean(userAddress),
   });
   return { data:Number(data) };
 };
