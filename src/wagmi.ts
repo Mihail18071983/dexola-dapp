@@ -1,6 +1,7 @@
 import { configureChains, createConfig, mainnet } from "wagmi";
 import { getDefaultWallets } from '@rainbow-me/rainbowkit'
-import {sepolia } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
+import { WALLET_CONNECT_PROJECT_ID, IFURA_API_KEY } from "./Project_constants";
 
 import { infuraProvider } from "wagmi/providers/infura";
 import { publicProvider } from "wagmi/providers/public";
@@ -9,7 +10,7 @@ import { publicProvider } from "wagmi/providers/public";
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [sepolia, mainnet],
   [
-    infuraProvider({ apiKey: import.meta.env.VITE_CONFIG_IFURA_API_KEY }),
+    infuraProvider({ apiKey: IFURA_API_KEY }),
     publicProvider(),
   ]
 );
@@ -17,7 +18,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
 const {connectors } = getDefaultWallets({
   appName: "dexola-dapp", 
   chains,
-  projectId: import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID,
+  projectId: WALLET_CONNECT_PROJECT_ID,
 })
 
 export const config = createConfig({

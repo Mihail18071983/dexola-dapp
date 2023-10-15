@@ -16,13 +16,13 @@ interface IProps {
 }
 
 export const ErrorMsg = () =>
-    toast(
-      <Msg
-        text1="Connection Error"
-        text2="Please try again"
-        Component={IconRejected}
-      />
-    );
+  toast(
+    <Msg
+      text1="Connection Error"
+      text2="Please try again"
+      Component={IconRejected}
+    />
+  );
 
 export const Form = ({ rewards }: IProps) => {
   const { address } = useAccount();
@@ -95,10 +95,9 @@ export const Form = ({ rewards }: IProps) => {
           <span className={styles.btnContent}>
             {isWaitingRewards ? "Processing..." : "Claim rewards"}
           </span>
-          {isWaitingRewards ||
-            (isWaitingRewardsWritten && (
-              <CustomLoader width={32} height={32} />
-            ))}
+          {(isWaitingRewards || isWaitingRewardsWritten) && (
+            <CustomLoader width={32} height={32} />
+          )}
         </Button>
       </div>
     </div>

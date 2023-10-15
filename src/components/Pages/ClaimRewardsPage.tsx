@@ -9,8 +9,6 @@ import { Unregistered } from "../Unregistered/Unregistered";
 
 const ClaimReawardsPage = () => {
   const { isConnected } = useAccount();
-
-
   const { data: rewardData } = useReward();
   const rewardsAvailable = formatted(rewardData).toFixed(0);
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAppContextValue } from "../../hooks/useContexValue";
 import { toast } from "react-toastify";
 import styles from "./Form.module.scss";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -9,15 +10,12 @@ import { ReactComponent as IconApproved } from "../../assets/svg/iconApproved.sv
 import { ReactComponent as IconRejected } from "../../assets/svg/iconRejected.svg";
 import { Msg } from "../../shared/Notification/Msg";
 import { ErrorMsg } from "./ClaimRewardsForm";
+import { CustomInput } from "../../shared/CustomInput/CustomInput";
+import { CONTRACT_STAKING_ADDRESS } from "../../Project_constants";
 
-import {
-  usePrepareContractWrite,
-  useContractWrite,
-  useAccount,
-  useWaitForTransaction,
-} from "wagmi";
+import { useContractWrite, useAccount, useWaitForTransaction } from "wagmi";
 
-import { useStakedBalance } from "../../hooks/contracts-api";
+import { useStakedBalance, useCheckAllowance } from "../../hooks/contracts-api";
 import { formatted } from "../../shared/utils/formatUnits";
 
 import {
@@ -29,11 +27,8 @@ type FormData = {
   amount: string;
 };
 
-const CONTRACT_STAKING_ADDRESS = import.meta.env.VITE_CONTRACT_STAKING_ADDRESS;
-
 export const Form = () => {
   const {
-    register,
     handleSubmit,
     control,
     reset,
@@ -46,9 +41,10 @@ export const Form = () => {
     mode: "onChange",
   });
 
+  const { rewardsAvailable } = useAppContextValue();
+
   const { data: stakedBalanceData } = useStakedBalance();
   const stakedBalance = formatted(stakedBalanceData).toFixed(0);
-
   const [Amount, setAmount] = useState<number | null>(null);
 
   const successMsg = () =>
@@ -63,16 +59,27 @@ export const Form = () => {
 
   const amountVAlue = Number(watch("amount"));
 
-  const { address } = useAccount();
+  const { address: userAddress } = useAccount();
+  const { data: allowance } = useCheckAllowance(userAddress!);
 
-  const { config: tokenConfig } = usePrepareContractWrite({
+  const {
+    writeAsync: approveTokenAmount,
+    data: approvedTokenAmount,
+    isLoading: isWatingForApprove,
+  } = useContractWrite({
     ...starRunnerTokenContractConfig,
     functionName: "approve",
-    args: [CONTRACT_STAKING_ADDRESS, stakedBalanceData || BigInt(2000 * 1e18)],
   });
 
-  const { writeAsync: approveTokenAmount, isLoading: isWaitingForApprove } =
-    useContractWrite(tokenConfig);
+  const { isLoading: isWaitingForApproveTransaction } = useWaitForTransaction({
+    hash: approvedTokenAmount?.hash,
+    onSuccess() {
+      successMsg();
+    },
+    onError() {
+      ErrorMsg();
+    },
+  });
 
   const {
     data,
@@ -81,7 +88,18 @@ export const Form = () => {
   } = useContractWrite({
     ...starRunnerStakingContractConfig,
     functionName: "withdraw",
-    args: [BigInt(amountVAlue * 1e18)],
+    onError() {
+      ErrorMsg();
+    },
+  });
+
+  const {
+    data: withdrawAllData,
+    writeAsync: withdrawAll,
+    isLoading: isWaitingForAllWithdrawing,
+  } = useContractWrite({
+    ...starRunnerStakingContractConfig,
+    functionName: "exit",
     onError() {
       ErrorMsg();
     },
@@ -97,9 +115,19 @@ export const Form = () => {
     },
   });
 
+  const { isLoading: isWaitingForTransactionAll } = useWaitForTransaction({
+    hash: withdrawAllData?.hash,
+    onSuccess() {
+      successMsg();
+    },
+    onError() {
+      ErrorMsg();
+    },
+  });
+
   const onSubmit: SubmitHandler<FormData> = async () => {
     try {
-      if (!address) {
+      if (!userAddress) {
         console.error("User address not available.");
         return;
       }
@@ -110,12 +138,28 @@ export const Form = () => {
 
       setAmount(amountVAlue);
 
-      await approveTokenAmount?.();
-      writeWithdraw?.();
+      if (allowance < amountVAlue * 1e18) {
+        await approveTokenAmount?.({
+          args: [CONTRACT_STAKING_ADDRESS, BigInt(amountVAlue * 1e18)],
+        }).then(() => writeWithdraw({ args: [BigInt(amountVAlue * 1e18)] }));
+      } else {
+        writeWithdraw?.({ args: [BigInt(amountVAlue * 1e18)] });
+      }
 
       reset();
     } catch (error) {
       ErrorMsg();
+    }
+  };
+
+  const withdrawAllAndClaim = async () => {
+    if (Number(stakedBalance) !== 0 || Number(rewardsAvailable) !== 0) {
+      try {
+        setAmount(Number(rewardsAvailable));
+        await withdrawAll?.();
+      } catch (error) {
+        ErrorMsg();
+      }
     }
   };
 
@@ -127,21 +171,15 @@ export const Form = () => {
             <span className={styles.stake}>Withdraw</span>
           </h2>
           <label className={styles.label} htmlFor="amount">
-            <input
-              id="amount"
-              className={styles.input}
-              {...register("amount", {
-                required: true,
+            <CustomInput
+              control={control}
+              errors={errors}
+              placeholder="Enter withdraw amount"
+              _rules={{
                 validate: (value) =>
                   Number(value) > 0 || "Must be a positive number",
-              })}
-              type="number"
-              step={0.01}
-              placeholder="Enter withdraw amount"
+              }}
             />
-            {errors.amount && (
-              <p className={styles.errMessage}>{errors.amount.message}</p>
-            )}
           </label>
 
           <p className={styles.availableTotens}>
@@ -183,17 +221,39 @@ export const Form = () => {
             <span className={styles.btnContent}>
               {isSubmitting ||
               isWaitingForTransaction ||
-              isWaitingForApprove ||
-              isWaitingForWithdrawing
+              isWatingForApprove ||
+              isWaitingForWithdrawing ||
+              isWaitingForApproveTransaction
                 ? "Withdrawing..."
                 : "Withdraw"}
             </span>
-            {isSubmitting ||
+            {(isSubmitting ||
               isWaitingForTransaction ||
-              isWaitingForApprove ||
-              (isWaitingForWithdrawing && (
-                <CustomLoader width={32} height={32} />
-              ))}
+              isWatingForApprove ||
+              isWaitingForApproveTransaction ||
+              isWaitingForWithdrawing) && (
+              <CustomLoader width={32} height={32} />
+            )}
+          </Button>
+
+          <Button
+            disabled={
+              (Number(stakedBalance) == 0 && Number(rewardsAvailable) == 0) ||
+              isWaitingForTransactionAll ||
+              isWaitingForAllWithdrawing
+            }
+            onClick={withdrawAllAndClaim}
+            className={`${styles.btn} ${styles.additionalBtn}`}
+            type="button"
+          >
+            <span className={styles.btnContent}>
+              {isWaitingForTransactionAll || isWaitingForAllWithdrawing
+                ? "Processing..."
+                : "withdraw all & Claim rewards"}
+            </span>
+            {(isWaitingForTransactionAll || isWaitingForAllWithdrawing) && (
+              <CustomLoader width={32} height={32} />
+            )}
           </Button>
         </div>
       </form>
